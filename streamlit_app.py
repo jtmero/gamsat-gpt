@@ -20,51 +20,47 @@ st.subheader("You can ask me to generate any kind of GAMSAT SIII question")
 # Create a text input for the prompt
 prompt = st.chat_input("Why don't you ask me to make you a question?")
 
-# Button to submit the prompt and generate the response
-if st.button("Generate"):
-    if not prompt:
-        st.error("Prompt is not defined")
+if prompt:
+    # Debug print statements
+    print(f"Prompt: {prompt}")
+    print(f"Assistant ID: {assistant_id}")
+
+    # Create a new thread with a message that has the uploaded file's ID
+    thread = openai_client.beta.threads.create(
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    # Print thread details for debugging
+    print(f"Thread: {thread}")
+
+    # Create a run with the new thread
+    run = openai_client.beta.threads.runs.create(
+        thread_id=thread.id,
+        assistant_id=assistant_id,  # Ensure assistant_id is correctly defined
+    )
+
+    # Print run details for debugging
+    print(f"Run: {run}")
+
+    # Create a status box to update the run status
+    status_box = st.empty()
+
+    # Check periodically whether the run is done, and update the status
+    while run.status != "completed":
+        time.sleep(5)
+        status_box.text(f"{run.status}...")
+        run = openai_client.beta.threads.runs.retrieve(
+            thread_id=thread.id, run_id=run.id
+        )
+
+    # Once the run is complete, update the status box and show the content
+    status_box.text("Complete")
+    messages = openai_client.beta.threads.messages.list(thread_id=thread.id)
+    
+    # Print messages details for debugging
+    print(f"Messages: {messages}")
+
+    if messages.data:
+        st.markdown(messages.data[0].content)
     else:
-        # Debug print statements
-        print(f"Prompt: {prompt}")
-        print(f"Assistant ID: {assistant_id}")
-
-        # Create a new thread with a message that has the uploaded file's ID
-        thread = openai_client.beta.threads.create(
-            messages=[{"role": "user", "content": prompt}]
-        )
-
-        # Print thread details for debugging
-        print(f"Thread: {thread}")
-
-        # Create a run with the new thread
-        run = openai_client.beta.threads.runs.create(
-            thread_id=thread.id,
-            assistant_id=assistant_id,  # Ensure assistant_id is correctly defined
-        )
-
-        # Print run details for debugging
-        print(f"Run: {run}")
-
-        # Create a status box to update the run status
-        status_box = st.empty()
-
-        # Check periodically whether the run is done, and update the status
-        while run.status != "completed":
-            time.sleep(5)
-            status_box.text(f"{run.status}...")
-            run = openai_client.beta.threads.runs.retrieve(
-                thread_id=thread.id, run_id=run.id
-            )
-
-        # Once the run is complete, update the status box and show the content
-        status_box.text("Complete")
-        messages = openai_client.beta.threads.messages.list(thread_id=thread.id)
-        
-        # Print messages details for debugging
-        print(f"Messages: {messages}")
-
-        if messages.data:
-            st.markdown(messages.data[0].content)
-        else:
-            st.warning("No messages found in the thread.")
+        st.warning("No messages found in the thread.")
