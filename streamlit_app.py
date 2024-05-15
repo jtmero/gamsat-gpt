@@ -59,7 +59,7 @@ if prompt:
             assistant_id=assistant.id,
         ) as stream:
             for chunk in stream:
-            if 'content' in chunk.delta:
-                response_content += chunk.delta['content']
-                with st.chat_message("assistant"):
-                    st.write(response_content)
+                if 'content' in chunk.delta:
+                    response_content += chunk.delta['content']
+                    with st.chat_message("assistant"):
+                        st.write(response_content)
