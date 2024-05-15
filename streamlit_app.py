@@ -40,20 +40,20 @@ if prompt:
     answer = st.chat_input("What's your answer?")
     if answer:
     # Display the user's question
-    with st.chat_message("user"):
-        st.write(answer)
+        with st.chat_message("user"):
+            st.write(answer)
         
-    # Add to the thread
-    response_message = openai_client.beta.threads.messages.create(
-        thread_id=thread.id,
-        role="user",
-        content=answer
-    )
+        # Add to the thread
+        response_message = openai_client.beta.threads.messages.create(
+            thread_id=thread.id,
+            role="user",
+            content=answer
+        )
 
-    # Continue streaming to get reasoning
-    with openai_client.beta.threads.runs.stream(
-        thread_id=thread.id,
-        assistant_id=assistant.id,
-    ) as stream:
-        with st.chat_message("assistant"):
-            st.write(stream.until_done())
+        # Continue streaming to get reasoning
+        with openai_client.beta.threads.runs.stream(
+            thread_id=thread.id,
+            assistant_id=assistant.id,
+        ) as stream:
+            with st.chat_message("assistant"):
+                st.write(stream.until_done())
