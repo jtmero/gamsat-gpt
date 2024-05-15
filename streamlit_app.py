@@ -37,7 +37,7 @@ if "assistant_id" not in st.session_state:
 
 # Function to run a session
 def run_session(messages):
-    url = f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/runs"
+    url = f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/sessions"
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}"
@@ -78,13 +78,13 @@ if prompt := st.chat_input("Why don't you ask me to generate you a question?"):
         # Poll the run status
         run_status = response_data["status"]
         while run_status in ["in_progress", "queued"]:
-            run_status_response = requests.get(f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/runs/{run_id}", headers=headers)
+            run_status_response = requests.get(f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/sessions/{run_id}", headers=headers)
             run_status_data = run_status_response.json()
             run_status = run_status_data["status"]
 
         # Retrieve the run messages
         if run_status == "completed":
-            messages_response = requests.get(f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/runs/{run_id}/messages", headers=headers)
+            messages_response = requests.get(f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/sessions/{run_id}/messages", headers=headers)
             if messages_response.status_code == 200:
                 messages_data = messages_response.json()
                 assistant_response = messages_data["messages"][-1]["content"]
