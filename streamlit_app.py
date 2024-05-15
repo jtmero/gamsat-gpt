@@ -23,45 +23,28 @@ if prompt:
     st.write(f"User has sent the following prompt: {prompt}")
 
 # Create a new thread with a message that has the uploaded file's ID
-try:
-    thread = openai_client.beta.threads.create(
-        messages=[{"role": "user", "content": prompt}]
-    )
-except openai.error.OpenAIError as e:
-    st.error(f"Failed to create thread: {e}")
-    raise
+thread = openai_client.beta.threads.create(
+    messages=[{"role": "user", "content": prompt}]
+)
 
 # Create a run with the new thread
-try:
-    run = openai_client.beta.threads.runs.create(
-        thread_id=thread.id,
-        assistant_id=assistant.id,
-    )
-except openai.error.OpenAIError as e:
-    st.error(f"Failed to create run: {e}")
-    raise
+run = openai_client.beta.threads.runs.create(
+    thread_id=thread.id,
+    assistant_id=assistant_id,  # Ensure assistant_id is correctly defined
+)
 
 # Check periodically whether the run is done, and update the status
-try:
-    while run.status != "completed":
-        time.sleep(5)
-        status_box.update(label=f"{run.status}...", state="running")
-        run = openai_client.beta.threads.runs.retrieve(
-            thread_id=thread.id, run_id=run.id
-        )
-except openai.error.OpenAIError as e:
-    st.error(f"Failed to retrieve run status: {e}")
-    raise
+while run.status != "completed":
+    time.sleep(5)
+    status_box.update(label=f"{run.status}...", state="running")
+    run = openai_client.beta.threads.runs.retrieve(
+        thread_id=thread.id, run_id=run.id
+    )
 
 # Once the run is complete, update the status box and show the content
 status_box.update(label="Complete", state="complete", expanded=True)
-
-try:
-    messages = openai_client.beta.threads.messages.list(thread_id=thread.id)
-    if messages.data:
-        st.markdown(messages.data[0].content[0].text.value)
-    else:
-        st.warning("No messages found in the thread.")
-except openai.error.OpenAIError as e:
-    st.error(f"Failed to retrieve messages: {e}")
-    raise
+messages = openai_client.beta.threads.messages.list(thread_id=thread.id)
+if messages.data:
+    st.markdown(messages.data[0].content)
+else:
+    st.warning("No messages found in the thread.")
