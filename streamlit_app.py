@@ -12,5 +12,6 @@ st.title("GamsatGPT")
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-4o"
 
-with st.chat_message("assistant"):
-    message_placeholder = "Ask me to make you a question!"
+prompt = st.chat_input("Ask me to make you a question")
+if prompt:
+    st.write(f"User has sent the following prompt: {prompt}")
