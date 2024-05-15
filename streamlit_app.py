@@ -1,9 +1,6 @@
 from openai import OpenAI
 import streamlit as st
 
-# Get the API key from environment variable
-api_key = os.getenv('API_KEY')
-
 # Load the model
 client = OpenAI(api_key = st.secrets["OPENAI_API_KEY"])
 assistant_id = "asst_mCUOQgJSBMtJjNQdCjcQxkxJ"
