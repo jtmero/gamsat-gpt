@@ -45,7 +45,7 @@ if prompt := st.chat_input("Why don't you ask me to generate you a question?"):
         response_data = response.json()
         assistant_response = response_data["choices"][0]["message"]["content"]
     else:
-        assistant_response = "Sorry, there was an error communicating with the assistant API."
+        assistant_response = f"Sorry, there was an error communicating with the assistant API. Status code: {response.status_code}. Response: {response.text}"
 
     # Add assistant response to chat history
     st.session_state.messages.append({"role": "assistant", "content": assistant_response})
