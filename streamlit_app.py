@@ -24,3 +24,31 @@ if prompt := st.chat_input("Why don't you ask me to generate you a question?"):
     # Display user message in chat message container
     with st.chat_message("user"):
         st.markdown(prompt)
+
+# Prepare the payload for the API request
+    payload = {
+        "assistant_id": assistant_id,
+        "messages": [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
+    }
+
+    # Headers for the API request
+    headers = {
+        "Authorization": f"Bearer {st.secrets['OPENAI_API_KEY']}",
+        "Content-Type": "application/json"
+    }
+
+    # Make the request to the custom assistant API
+    response = requests.post(f"https://api.openai.com/v1/assistants/{assistant_id}/completions", json=payload, headers=headers)
+
+    if response.status_code == 200:
+        response_data = response.json()
+        assistant_response = response_data["choices"][0]["message"]["content"]
+    else:
+        assistant_response = "Sorry, there was an error communicating with the assistant API."
+
+    # Add assistant response to chat history
+    st.session_state.messages.append({"role": "assistant", "content": assistant_response})
+
+    # Display assistant response in chat message container
+    with st.chat_message("assistant"):
+        st.markdown(assistant_response)
