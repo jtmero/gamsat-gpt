@@ -1,9 +1,6 @@
 from openai import OpenAI
 import streamlit as st
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-load_dotenv()
+import os
 
 # Get the API key from environment variable
 api_key = os.getenv('API_KEY')
