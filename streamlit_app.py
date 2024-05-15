@@ -17,13 +17,16 @@ assistant_id = assistant.id  # Extract assistant ID
 st.title("GamsatGPT")
 st.subheader("You can ask me to generate any kind of GAMSAT SIII question")
 
-# Create a text input for the prompt
-prompt = st.chat_input("Why don't you ask me to make you a question?")
+# Create a chat input for the prompt
+prompt = st.chat_input("Enter your prompt here:")
 
 if prompt:
     # Debug print statements
     print(f"Prompt: {prompt}")
     print(f"Assistant ID: {assistant_id}")
+
+    # Display the user's question
+    st.markdown(f"**You:** {prompt}")
 
     # Create a new thread with a message that has the uploaded file's ID
     thread = openai_client.beta.threads.create(
@@ -61,6 +64,8 @@ if prompt:
     print(f"Messages: {messages}")
 
     if messages.data:
-        st.markdown(messages.data[0].content)
+        # Extract and clean the text content from the response
+        response_content = messages.data[0].content.value
+        st.markdown(f"**Assistant:** {response_content}")
     else:
         st.warning("No messages found in the thread.")
