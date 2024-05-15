@@ -45,7 +45,7 @@ if prompt:
 
     # When the run is complete, retrieve the messages
     if run.status == "completed":
-        messages = client.beta.threads.messages.list(
+        messages = openai_client.beta.threads.messages.list(
             thread_id=thread.id
         )
         with st.chat_message("assistant"):
