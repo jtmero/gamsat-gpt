@@ -1,12 +1,41 @@
-from openai import OpenAI
 import streamlit as st
 import requests
+import json
 
-# Load the model
-client = OpenAI(api_key = st.secrets["OPENAI_API_KEY"])
-assistant_id = "asst_mCUOQgJSBMtJjNQdCjcQxkxJ"
+# Set OpenAI API key
+api_key = st.secrets["OPENAI_API_KEY"]
 
-# Create the chate interface
+# Function to create the assistant
+def create_assistant():
+    url = "https://api.openai.com/v1/assistants"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}",
+        "OpenAI-Beta": "assistants=v2"
+    }
+    data = {
+        "instructions": "You are a personal math tutor. When asked a question, write and run Python code to answer the question.",
+        "name": "Math Tutor",
+        "tools": [{"type": "code_interpreter"}],
+        "model": "gpt-4-turbo"
+    }
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 200:
+        assistant_data = response.json()
+        return assistant_data["id"]
+    else:
+        st.error(f"Error creating assistant: {response.text}")
+        return None
+
+# Create the assistant and store the ID
+if "assistant_id" not in st.session_state:
+    assistant_id = create_assistant()
+    if assistant_id:
+        st.session_state.assistant_id = assistant_id
+    else:
+        st.stop()
+
+# Create the chat interface
 st.title("GamsatGPT")
 
 # Initialize chat history
@@ -28,17 +57,17 @@ if prompt := st.chat_input("Why don't you ask me to generate you a question?"):
 
     # Prepare the payload for the initial run
     payload = {
-        "assistant_id": assistant_id,
         "messages": [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
     }
 
     # Headers for the API request
     headers = {
-        "Authorization": f"Bearer {st.secrets['OPENAI_API_KEY']}",
+        "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
 
     # Initialize the run
+    assistant_id = st.session_state.assistant_id
     run_response = requests.post(f"https://api.openai.com/v1/assistants/{assistant_id}/runs", json=payload, headers=headers)
 
     if run_response.status_code == 200:
