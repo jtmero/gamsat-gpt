@@ -34,7 +34,8 @@ if prompt:
         assistant_id=assistant.id,
     ) as stream:
         with st.chat_message("assistant"):
-            st.write(stream.until_done())
+            question = st.write_stream(stream.text_deltas)
+            stream.until_done()
 
     # Ask the user to give an answer
     answer = st.chat_input("What's your answer?")
@@ -56,4 +57,5 @@ if prompt:
             assistant_id=assistant.id,
         ) as stream:
             with st.chat_message("assistant"):
-                st.write(stream.until_done())
+                reasoning = st.write_stream(stream.text_deltas)
+                stream.until_done()
