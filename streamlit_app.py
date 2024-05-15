@@ -4,12 +4,26 @@ import streamlit as st
 # Get the API key from environment variable
 api_key = os.getenv('API_KEY')
 
-# Create the title
-st.title("GamsatGPT")
-
 # Load the model
 client = OpenAI(api_key = st.secrets["OPENAI_API_KEY"])
+assistant_id = "asst_mCUOQgJSBMtJjNQdCjcQxkxJ"
 
-prompt = st.chat_input("Why don't you ask me to make you a question?")
-if prompt:
-    st.write(f"User has sent the following prompt: {prompt}")
+# Create the chate interface
+st.title("GamsatGPT")
+
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Display chat messages from history on app rerun
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# Accept user input
+if prompt := st.chat_input("Why don't you ask me to generate you a question?"):
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    # Display user message in chat message container
+    with st.chat_message("user"):
+        st.markdown(prompt)
