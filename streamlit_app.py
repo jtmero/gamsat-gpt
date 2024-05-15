@@ -1,81 +1,47 @@
 import streamlit as st
 import requests
+import os
+import time
 
+# Set API key
 api_key = st.secrets["OPENAI_API_KEY"]
 
-def create_assistant():
-    url = "https://api.openai.com/v1/assistants"
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {api_key}",
-        "OpenAI-Beta": "assistants=v2"
-    }
-    data = {
-        "instructions": "You are a helpful assistant.",
-        "name": "Test Assistant",
-        "model": "gpt-4-turbo"
-    }
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 200:
-        assistant_data = response.json()
-        return assistant_data["id"]
-    else:
-        st.error(f"Error creating assistant: {response.text}")
-        return None
+# Create an OpenAI client with your API key
+openai_client = openai.Client(api_key = api_key)
+                              
+# Retrieve the assistant you want to use
+assistant = openai_client.beta.assistants.retrieve("asst_3no7SQcpD6vOpUHqMCL2cRUB")
 
-if "assistant_id" not in st.session_state:
-    assistant_id = create_assistant()
-    if assistant_id:
-        st.session_state.assistant_id = assistant_id
-    else:
-        st.stop()
+# Create the title and subheader for the Streamlit page
+st.title("GamsatGPT")
+st.subheader("You can ask me to generate any kind of GAMSAT SIII question")
 
-st.write(f"Assistant ID: {st.session_state.assistant_id}")
+# Ask user for input
+prompt = st.chat_input("Say something")
+if prompt:
+    st.write(f"User has sent the following prompt: {prompt}")
 
-# Function to start a session
-def start_session():
-    url = f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/sessions"
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {api_key}"
-    }
-    data = {}
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 200:
-        session_data = response.json()
-        return session_data["id"]
-    else:
-        st.error(f"Error starting session: {response.text}")
-        return None
+# Create a new thread with a message that has the uploaded file's ID
+thread = openai_client.beta.threads.create(
+    messages=[{"role": "user",
+               "content": prompt}]
+        )
 
-# Start a session and store the session ID
-if "session_id" not in st.session_state:
-    session_id = start_session()
-    if session_id:
-        st.session_state.session_id = session_id
-    else:
-        st.stop()
+# Create a run with the new thread
+run = openai_client.beta.threads.runs.create(
+    thread_id=thread.id,
+    assistant_id=assistant.id,
+)
 
-# Function to send a message to the assistant
-def send_message(message):
-    url = f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/sessions/{st.session_state.session_id}/messages"
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {api_key}"
-    }
-    data = {
-        "messages": [{"role": "user", "content": message}]
-    }
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 200:
-        response_data = response.json()
-        return response_data["choices"][0]["message"]["content"]
-    else:
-        st.error(f"Error sending message: {response.text}")
-        return None
+# Check periodically whether the run is done, and update the status
+while run.status != "completed":
+    time.sleep(5)
+    status_box.update(label=f"{run.status}...", state="running")
+    run = openai_client.beta.threads.runs.retrieve(
+        thread_id=thread.id, run_id=run.id)
 
-# Accept user input
-if prompt := st.text_input("Ask the assistant something:"):
-    response = send_message(prompt)
-    if response:
-        st.write(f"Assistant response: {response}")
+# Once the run is complete, update the status box and show the content
+status_box.update(label="Complete", state="complete", expanded=True)
+messages = openai_client.beta.threads.messages.list(
+    thread_id=thread.id)
+st.markdown(messages.data[0].content[0].text.value)
