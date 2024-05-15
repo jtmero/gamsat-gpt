@@ -32,8 +32,33 @@ if "assistant_id" not in st.session_state:
 
 st.write(f"Assistant ID: {st.session_state.assistant_id}")
 
+# Function to start a session
+def start_session():
+    url = f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/sessions"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
+    }
+    data = {}
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 200:
+        session_data = response.json()
+        return session_data["id"]
+    else:
+        st.error(f"Error starting session: {response.text}")
+        return None
+
+# Start a session and store the session ID
+if "session_id" not in st.session_state:
+    session_id = start_session()
+    if session_id:
+        st.session_state.session_id = session_id
+    else:
+        st.stop()
+
+# Function to send a message to the assistant
 def send_message(message):
-    url = f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/completions"
+    url = f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/sessions/{st.session_state.session_id}/messages"
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}"
@@ -49,8 +74,7 @@ def send_message(message):
         st.error(f"Error sending message: {response.text}")
         return None
 
-st.title("Simple OpenAI Assistant")
-
+# Accept user input
 if prompt := st.text_input("Ask the assistant something:"):
     response = send_message(prompt)
     if response:
