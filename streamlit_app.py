@@ -1,6 +1,5 @@
 import streamlit as st
 import requests
-import json
 
 # Set OpenAI API key
 api_key = st.secrets["OPENAI_API_KEY"]
@@ -35,9 +34,33 @@ if "assistant_id" not in st.session_state:
     else:
         st.stop()
 
-# Function to run a session
-def run_session(messages):
+# Function to start a session
+def start_session():
     url = f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/sessions"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
+    }
+    data = {}
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 200:
+        session_data = response.json()
+        return session_data["id"]
+    else:
+        st.error(f"Error starting session: {response.text}")
+        return None
+
+# Start a session and store the session ID
+if "session_id" not in st.session_state:
+    session_id = start_session()
+    if session_id:
+        st.session_state.session_id = session_id
+    else:
+        st.stop()
+
+# Function to send messages to the assistant
+def send_message(messages):
+    url = f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/sessions/{st.session_state.session_id}/messages"
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}"
@@ -47,7 +70,7 @@ def run_session(messages):
     if response.status_code == 200:
         return response.json()
     else:
-        st.error(f"Error running session: {response.text}")
+        st.error(f"Error sending message: {response.text}")
         return None
 
 # Create the chat interface
@@ -70,28 +93,10 @@ if prompt := st.chat_input("Why don't you ask me to generate you a question?"):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Run a session with the assistant
-    response_data = run_session(st.session_state.messages)
+    # Send message to the assistant
+    response_data = send_message(st.session_state.messages)
     if response_data:
-        run_id = response_data["id"]
-
-        # Poll the run status
-        run_status = response_data["status"]
-        while run_status in ["in_progress", "queued"]:
-            run_status_response = requests.get(f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/sessions/{run_id}", headers=headers)
-            run_status_data = run_status_response.json()
-            run_status = run_status_data["status"]
-
-        # Retrieve the run messages
-        if run_status == "completed":
-            messages_response = requests.get(f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/sessions/{run_id}/messages", headers=headers)
-            if messages_response.status_code == 200:
-                messages_data = messages_response.json()
-                assistant_response = messages_data["messages"][-1]["content"]
-            else:
-                assistant_response = "Sorry, there was an error retrieving the messages."
-        else:
-            assistant_response = "Sorry, the run did not complete successfully."
+        assistant_response = response_data["choices"][0]["message"]["content"]
 
         # Add assistant response to chat history
         st.session_state.messages.append({"role": "assistant", "content": assistant_response})
