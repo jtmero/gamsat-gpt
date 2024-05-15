@@ -35,6 +35,21 @@ if "assistant_id" not in st.session_state:
     else:
         st.stop()
 
+# Function to run a session
+def run_session(messages):
+    url = f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/runs"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
+    }
+    data = {"messages": messages}
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        st.error(f"Error running session: {response.text}")
+        return None
+
 # Create the chat interface
 st.title("GamsatGPT")
 
@@ -55,35 +70,21 @@ if prompt := st.chat_input("Why don't you ask me to generate you a question?"):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Prepare the payload for the initial run
-    payload = {
-        "messages": [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
-    }
-
-    # Headers for the API request
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
-
-    # Initialize the run
-    assistant_id = st.session_state.assistant_id
-    run_response = requests.post(f"https://api.openai.com/v1/assistants/{assistant_id}/runs", json=payload, headers=headers)
-
-    if run_response.status_code == 200:
-        run_data = run_response.json()
-        run_id = run_data["id"]
+    # Run a session with the assistant
+    response_data = run_session(st.session_state.messages)
+    if response_data:
+        run_id = response_data["id"]
 
         # Poll the run status
-        run_status = run_data["status"]
+        run_status = response_data["status"]
         while run_status in ["in_progress", "queued"]:
-            run_status_response = requests.get(f"https://api.openai.com/v1/assistants/{assistant_id}/runs/{run_id}", headers=headers)
+            run_status_response = requests.get(f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/runs/{run_id}", headers=headers)
             run_status_data = run_status_response.json()
             run_status = run_status_data["status"]
 
         # Retrieve the run messages
         if run_status == "completed":
-            messages_response = requests.get(f"https://api.openai.com/v1/assistants/{assistant_id}/runs/{run_id}/messages", headers=headers)
+            messages_response = requests.get(f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/runs/{run_id}/messages", headers=headers)
             if messages_response.status_code == 200:
                 messages_data = messages_response.json()
                 assistant_response = messages_data["messages"][-1]["content"]
@@ -92,12 +93,9 @@ if prompt := st.chat_input("Why don't you ask me to generate you a question?"):
         else:
             assistant_response = "Sorry, the run did not complete successfully."
 
-    else:
-        assistant_response = f"Sorry, there was an error initializing the run. Status code: {run_response.status_code}. Response: {run_response.text}"
+        # Add assistant response to chat history
+        st.session_state.messages.append({"role": "assistant", "content": assistant_response})
 
-    # Add assistant response to chat history
-    st.session_state.messages.append({"role": "assistant", "content": assistant_response})
-
-    # Display assistant response in chat message container
-    with st.chat_message("assistant"):
-        st.markdown(assistant_response)
+        # Display assistant response in chat message container
+        with st.chat_message("assistant"):
+            st.markdown(assistant_response)
