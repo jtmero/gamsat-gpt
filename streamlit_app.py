@@ -30,36 +30,24 @@ if prompt:
         messages=[{"role": "user", "content": prompt}]
     )
 
-    # Stream the question
-    with openai_client.beta.threads.runs.stream(
+    # Create a run with the new thread
+    run = openai_client.beta.threads.runs.create(
         thread_id=thread.id,
-        assistant_id=assistant_id,  # Ensure assistant_id is correctly defined
-    ) as stream:
-        for chunk in stream:
-            if 'content' in chunk.delta:
-                response_content += chunk.delta['content']
-                with st.chat_message("assistant"):
-                    st.write(response_content)
+        assistant_id=assistant.id,
+    )
 
-    # After the question is generated, ask the user for their answer
-    user_answer = st.chat_input("What is your answer?")
-
-    if user_answer:
-        with st.chat_message("user"):
-            st.write(user_answer)
-        response_message = client.beta.threads.messages.create(
-        thread_id=thread.id,
-        role="user",
-        content=user_answer
+    # Check periodically whether the run is done, and update the status
+    while run.status != "completed":
+        time.sleep(5)
+        run = openai_client.beta.threads.runs.retrieve(
+            thread_id=thread.id, run_id=run.id
         )
 
-    # Continue streaming to get reasoning
-        with client.beta.threads.runs.stream(
-            thread_id=thread.id,
-            assistant_id=assistant.id,
-        ) as stream:
-            for chunk in stream:
-                if 'content' in chunk.delta:
-                    response_content += chunk.delta['content']
-                    with st.chat_message("assistant"):
-                        st.write(response_content)
+    # When the run is complete, retrieve the messages
+    if run.status == "completed":
+        messages = client.beta.threads.messages.list(
+            thread_id=thread.id
+        )
+        with st.chat_message("assistant"):
+            st.write(messages)
+
