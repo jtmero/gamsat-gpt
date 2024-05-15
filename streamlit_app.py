@@ -1,5 +1,6 @@
 from openai import OpenAI
 import streamlit as st
+import requests
 
 # Load the model
 client = OpenAI(api_key = st.secrets["OPENAI_API_KEY"])
