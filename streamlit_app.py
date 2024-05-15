@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 import os
 import time
+import openai
 
 # Set API key
 api_key = st.secrets["OPENAI_API_KEY"]
