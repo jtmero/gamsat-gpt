@@ -52,5 +52,5 @@ if prompt:
         response = messages.data[0].content[0].text.value
         
         with st.chat_message("assistant"):
-            st.write(messages)
+            st.write(response)
 
