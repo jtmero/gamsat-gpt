@@ -1,10 +1,8 @@
 import streamlit as st
 import requests
 
-# Set OpenAI API key
 api_key = st.secrets["OPENAI_API_KEY"]
 
-# Function to create the assistant
 def create_assistant():
     url = "https://api.openai.com/v1/assistants"
     headers = {
@@ -25,7 +23,6 @@ def create_assistant():
         st.error(f"Error creating assistant: {response.text}")
         return None
 
-# Create the assistant and store the ID
 if "assistant_id" not in st.session_state:
     assistant_id = create_assistant()
     if assistant_id:
@@ -34,3 +31,27 @@ if "assistant_id" not in st.session_state:
         st.stop()
 
 st.write(f"Assistant ID: {st.session_state.assistant_id}")
+
+def send_message(message):
+    url = f"https://api.openai.com/v1/assistants/{st.session_state.assistant_id}/completions"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
+    }
+    data = {
+        "messages": [{"role": "user", "content": message}]
+    }
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 200:
+        response_data = response.json()
+        return response_data["choices"][0]["message"]["content"]
+    else:
+        st.error(f"Error sending message: {response.text}")
+        return None
+
+st.title("Simple OpenAI Assistant")
+
+if prompt := st.text_input("Ask the assistant something:"):
+    response = send_message(prompt)
+    if response:
+        st.write(f"Assistant response: {response}")
