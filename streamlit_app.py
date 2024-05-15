@@ -49,7 +49,7 @@ if prompt:
             thread_id=thread.id
         )
         # Extract just the response from the message data
-        #response = messages.content.text.value
+        response = messages.data[0].content[0].text.value
         
         with st.chat_message("assistant"):
             st.write(messages)
