@@ -48,6 +48,9 @@ if prompt:
         messages = openai_client.beta.threads.messages.list(
             thread_id=thread.id
         )
+        # Extract just the response from the message data
+        response = messages.content.text.value
+        
         with st.chat_message("assistant"):
-            st.write(messages.value)
+            st.write(response)
 
