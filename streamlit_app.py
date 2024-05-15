@@ -49,5 +49,5 @@ if prompt:
             thread_id=thread.id
         )
         with st.chat_message("assistant"):
-            st.write(messages)
+            st.write(messages.value)
 
