@@ -35,7 +35,11 @@ if prompt:
         thread_id=thread.id,
         assistant_id=assistant_id,  # Ensure assistant_id is correctly defined
     ) as stream:
-        stream.until_done()
+        for chunk in stream:
+            if 'content' in chunk.delta:
+                response_content += chunk.delta['content']
+                with st.chat_message("assistant"):
+                    st.write(response_content)
 
     # After the question is generated, ask the user for their answer
     user_answer = st.chat_input("What is your answer?")
@@ -54,4 +58,8 @@ if prompt:
             thread_id=thread.id,
             assistant_id=assistant.id,
         ) as stream:
-            stream.until_done()
+            for chunk in stream:
+            if 'content' in chunk.delta:
+                response_content += chunk.delta['content']
+                with st.chat_message("assistant"):
+                    st.write(response_content)
