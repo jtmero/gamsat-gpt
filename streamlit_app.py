@@ -18,7 +18,7 @@ st.title("GamsatGPT")
 st.subheader("You can ask me to generate any kind of GAMSAT SIII question")
 
 # Create a text input for the prompt
-prompt = st.text_input("Enter your prompt here:")
+prompt = st.chat_input("Why don't you ask me to make you a question?")
 
 # Button to submit the prompt and generate the response
 if st.button("Generate"):
