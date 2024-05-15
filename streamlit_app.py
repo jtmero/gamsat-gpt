@@ -18,54 +18,40 @@ st.title("GamsatGPT")
 st.subheader("You can ask me to generate any kind of GAMSAT SIII question")
 
 # Create a chat input for the prompt
-prompt = st.chat_input("Enter your prompt here:")
+prompt = st.chat_input("Why don't you ask me to make you a question?")
 
 if prompt:
-    # Debug print statements
-    print(f"Prompt: {prompt}")
-    print(f"Assistant ID: {assistant_id}")
-
     # Display the user's question
-    st.markdown(f"**You:** {prompt}")
+    with st.chat_message("user"):
+        st.write(prompt)
 
-    # Create a new thread with a message that has the uploaded file's ID
+    # Create a new thread
     thread = openai_client.beta.threads.create(
         messages=[{"role": "user", "content": prompt}]
     )
 
-    # Print thread details for debugging
-    print(f"Thread: {thread}")
-
-    # Create a run with the new thread
-    run = openai_client.beta.threads.runs.create(
+    # Stream the question
+    with openai_client.beta.threads.runs.stream(
         thread_id=thread.id,
         assistant_id=assistant_id,  # Ensure assistant_id is correctly defined
-    )
+    ) as stream:
+        stream.until_done()
 
-    # Print run details for debugging
-    print(f"Run: {run}")
+    # After the question is generated, ask the user for their answer
+    user_answer = st.chat_input("What is your answer?")
 
-    # Create a status box to update the run status
-    status_box = st.empty()
-
-    # Check periodically whether the run is done, and update the status
-    while run.status != "completed":
-        time.sleep(5)
-        status_box.text(f"{run.status}...")
-        run = openai_client.beta.threads.runs.retrieve(
-            thread_id=thread.id, run_id=run.id
+    if user_answer:
+        with st.chat_message("user"):
+            st.write(user_answer)
+        response_message = client.beta.threads.messages.create(
+        thread_id=thread.id,
+        role="user",
+        content=user_answer
         )
 
-    # Once the run is complete, update the status box and show the content
-    status_box.text("Complete")
-    messages = openai_client.beta.threads.messages.list(thread_id=thread.id)
-    
-    # Print messages details for debugging
-    print(f"Messages: {messages}")
-
-    if messages.data:
-        # Extract and clean the text content from the response
-        response_content = messages.data[0].content.value
-        st.markdown(f"**Assistant:** {response_content}")
-    else:
-        st.warning("No messages found in the thread.")
+    # Continue streaming to get reasoning
+        with client.beta.threads.runs.stream(
+            thread_id=thread.id,
+            assistant_id=assistant.id,
+        ) as stream:
+            stream.until_done()
