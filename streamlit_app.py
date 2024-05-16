@@ -49,10 +49,10 @@ if prompt := st.chat_input("Enter your reply"):
             if event.event == "thread.message.completed":
                 response = event.data.content
                 for block in response:
-            if block.type == 'text':
-                # Extract the text from the `value` field
-                text_content = block.text.value
-                # Display this text in Streamlit
-                st.markdown(text_content)
-                # Optionally append this to your session state or another structure
-                st.session_state.messages.append({"role": "assistant", "content": text_content})
+                    if block.type == 'text':
+                    # Extract the text from the `value` field
+                    text_content = block.text.value
+                    # Display this text in Streamlit
+                    st.markdown(text_content)
+                    # Optionally append this to your session state or another structure
+                    st.session_state.messages.append({"role": "assistant", "content": text_content})
