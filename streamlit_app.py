@@ -67,6 +67,7 @@ if prompt := st.chat_input("Enter your reply"):
                         
                         # Display this text in Streamlit
                         st.markdown(text_content)
+                        st.markdown("$K_m$ is the Michaelis constant, which is the substrate concentration at which the reaction rate is half of $V_{\max}$.")
                         
                         # Append this to session state
                         st.session_state.messages.append({"role": "assistant", "content": text_content})
