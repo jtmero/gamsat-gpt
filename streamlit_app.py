@@ -1,52 +1,55 @@
 import streamlit as st
 from openai import OpenAI
 
-# Set up the chat title and introduction
+# Set up the chat
 st.title("GamsatGPT")
 intro = "Welcome to GamsatGPT. You can ask me to generate any kind of GAMSAT SIII question"
 
 # Load the OpenAi client
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-# Retrieve the assistant (replace with your assistant's ID)
+# Retrieve the assistant
 assistant = client.beta.assistants.retrieve("asst_3no7SQcpD6vOpUHqMCL2cRUB")
 
-# Initialize the session state for storing model and messages
+# Initialize session state
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-4o"
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "assistant", "content": intro}]
+if "thread_id" not in st.session_state:
+    thread = client.beta.threads.create()
+    st.session_state.thread_id = thread.id
 
-# Display the previous messages
+# Display messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Enter new messages to chat from the user
+# User input
 if prompt := st.chat_input("Enter your reply"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Create a thread
-    thread = client.beta.threads.create()
-
-    # Append the prompt to the thread as a message
-    message = client.beta.threads.messages.create(
-        thread_id=thread.id,
+    # Append the prompt to the existing thread
+    client.beta.threads.messages.create(
+        thread_id=st.session_state.thread_id,
         role="user",
         content=prompt)
 
-    # Generate the assistant reply and process the stream
+    # Generate and display the assistant reply
     with st.spinner('Generating response...'):
         with client.beta.threads.runs.stream(
-            thread_id=thread.id,
+            thread_id=st.session_state.thread_id,
             assistant_id=assistant.id,
         ) as stream:
             for event in stream:
-                if event.event == 'thread.message.completed' and hasattr(event, 'data'):
-                    if 'content' in event.data:
-                        assistant_response = ''.join([content_block.text.value for content_block in event.data.content if hasattr(content_block, 'text')])
+                if event.event == 'thread.message.completed' and 'data' in event:
+                    # We expect the message content to be inside the data attribute
+                    content_blocks = event.data.get('content', [])
+                    if content_blocks:
+                        # Extract text value from each content block that has a text attribute
+                        assistant_response = ''.join([block.text.value for block in content_blocks if hasattr(block, 'text')])
                         st.session_state.messages.append({"role": "assistant", "content": assistant_response})
                         with st.chat_message("assistant"):
                             st.markdown(assistant_response)
