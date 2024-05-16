@@ -55,16 +55,11 @@ if prompt := st.chat_input("Enter your reply"):
                 for block in response:
                     if block.type == 'text':
                         # Extract the text from the `value` field
-                        text_content = block.text.value
+                        text_content = str(block.text.value)
                         #text_content = "( A ) and [ B ]," ### Using to test output modification
 
                         # Replace "(" or ")" surrounded by any amount of whitespace with "$"
-                        text_content = re.sub(r'\s+\)', '$', text_content)
-                        text_content = re.sub(r'\(\s+', '$', text_content)
-
-                        # Replace "[" or "]" surrounded by any amount of whitespace with "$$"
-                        text_content = re.sub(r'\s+\]', '$$', text_content)
-                        text_content = re.sub(r'\[\s+', '$$', text_content)
+                        text_content = text_content.replace(' )','$').replace('( ', '$')
                         
                         # Display this text in Streamlit
                         st.markdown(text_content)
