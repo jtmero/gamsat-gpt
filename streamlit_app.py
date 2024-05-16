@@ -37,13 +37,32 @@ if prompt := st.chat_input("Enter your reply"):
         role="user",
         content=prompt)
     
+    # Custom event handler to collect the assistant's reply
+    class SimpleEventHandler:
+        def __init__(self):
+            self.messages = []
+
+        def handle_event(self, event):
+            if 'choices' in event and event['choices'][0]['delta'].get('content'):
+                self.messages.append(event['choices'][0]['delta']['content'])
+
+    # Create an instance of the custom event handler
+    event_handler = SimpleEventHandler()
+    
     # Generate the assistant reply
     with st.chat_message("assistant"):
-        run = client.beta.threads.runs.stream(
+        with client.beta.threads.runs.stream(
             thread_id=thread.id,
             assistant_id=assistant.id,
+            event_handler=event_handler,
         ) as stream:
             stream.until_done()
-        
-        response = st.write_stream(run)
+
+        # Collect the response from the messages
+        response = "".join(event_handler.messages)
+
+        # Write the response to the Streamlit chat
+        st.markdown(response)
+
+    # Append the assistant's message to the session state messages
     st.session_state.messages.append({"role": "assistant", "content": response})
