@@ -50,3 +50,5 @@ if prompt := st.chat_input("Enter your reply"):
                 response = event.data.content
                 st.markdown(response)
                 st.session_state.messages.append({"role": "assistant", "content": response})
+
+    break
