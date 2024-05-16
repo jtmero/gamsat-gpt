@@ -58,12 +58,7 @@ if prompt := st.chat_input("Enter your reply"):
                         text_content = block.text.value
 
                         # Replace "(" or ")" surrounded by any amount of whitespace with "$"
-                        text_content = re.sub(r'\s*\(\s+', '$', text_content)
-                        text_content = re.sub(r'\s+\)\s*', '$', text_content)
-                        
-                        # Replace "[" or "]" surrounded by any amount of whitespace with "$$"
-                        text_content = re.sub(r'\s*\[\s+', '$$', text_content)
-                        text_content = re.sub(r'\s+\]\s*', '$$', text_content)
+                        text_content = re.sub(r'\s+\)', '$', text_content)
                         
                         # Display this text in Streamlit
                         st.markdown(text_content)
