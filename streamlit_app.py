@@ -44,6 +44,8 @@ if prompt := st.chat_input("Enter your reply"):
             assistant_id=assistant.id,
             stream=True
         )
-        
-        response = st.write_stream(stream)
-    st.session_state.messages.append({"role": "assistant", "content": response})
+
+        for event in stream:
+            response = st.write_stream(event)
+            
+        st.session_state.messages.append({"role": "assistant", "content": response})
