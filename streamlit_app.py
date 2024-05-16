@@ -48,5 +48,3 @@ if prompt := st.chat_input("Enter your reply"):
         if event.event == "thread.message.delta":
             response = event.data.delta.content
             st.write_stream(response)
-        
-        st.session_state.messages.append({"role": "assistant", "content": response})
