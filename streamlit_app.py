@@ -46,5 +46,5 @@ if prompt := st.chat_input("Enter your reply"):
     
     for event in stream:
         if event.event == "thread.message.delta":
-            response = event.data.delta.content
+            response = event.data.delta.content.text.value
             st.write_stream(response)
