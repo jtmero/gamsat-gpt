@@ -59,7 +59,7 @@ if prompt := st.chat_input("Enter your reply"):
                         # Replace the latex formatting of ChatGPT with that recognised by markdown
 
                         # Display this text in Streamlit
-                        st.markdown(type(text_content))
+                        st.markdown(text_content)
                         
                         # Append this to session state
                         st.session_state.messages.append({"role": "assistant", "content": text_content})
