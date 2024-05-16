@@ -39,9 +39,11 @@ if prompt := st.chat_input("Enter your reply"):
 
     # Generate and display the assistant reply
     with st.spinner('Generating response...'):
-        with client.beta.threads.runs.stream(
+        stream = client.beta.threads.runs.create(
             thread_id=st.session_state.thread_id,
             assistant_id=assistant.id,
-        ) as stream:
-            for event in stream:
-                st.write(event.run.id)
+            stream=True
+        )
+        
+        response = st.write_stream(stream)
+    st.session_state.messages.append({"role": "assistant", "content": response})
