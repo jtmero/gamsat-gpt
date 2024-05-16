@@ -7,7 +7,7 @@ intro = "Welcome to GamsatGPT. You can ask me to generate any kind of GAMSAT SII
 
 # Load the OpenAi client and assistant
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-assistant = openai_client.beta.assistants.retrieve("asst_3no7SQcpD6vOpUHqMCL2cRUB")
+assistant = client.beta.assistants.retrieve("asst_3no7SQcpD6vOpUHqMCL2cRUB")
 
 # Initialize the session state
 if "openai_model" not in st.session_state:
