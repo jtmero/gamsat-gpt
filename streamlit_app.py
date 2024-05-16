@@ -29,7 +29,7 @@ if prompt := st.chat_input("Enter your reply"):
         st.markdown(prompt)
 
     # Create a thread
-    client.beta.threads.create()
+    thread = client.beta.threads.create()
     
     # Append the prompt to the thread as a message
     message = client.beta.threads.messages.create(
