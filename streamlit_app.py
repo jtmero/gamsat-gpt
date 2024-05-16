@@ -56,14 +56,12 @@ if prompt := st.chat_input("Enter your reply"):
                     if block.type == 'text':
                         # Extract the text from the `value` field
                         text_content = block.text.value
-                        #text_content = "( A ) and [ B ]," ### Using to test output modification
 
-                        # Replace "(" or ")" surrounded by any amount of whitespace with "$"
+                        # Replace any parentheses with '$$' for Latex formatting
                         text_content = text_content.replace(')','$$').replace('(','$$')
 
-                        text_content = "abc"
                         # Display this text in Streamlit
-                        st.markdown(type(text_content))
+                        st.markdown(text_content)
                         
                         # Append this to session state
                         st.session_state.messages.append({"role": "assistant", "content": text_content})
