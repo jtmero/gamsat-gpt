@@ -44,4 +44,10 @@ if prompt := st.chat_input("Enter your reply"):
             assistant_id=assistant.id,
         ) as stream:
             for event in stream:
-                st.write(event)
+                if event.event == 'thread.message.completed' and hasattr(event, 'data'):
+                    if 'content' in event.data:
+                        assistant_response = ''.join([content_block.text.value for content_block in event.data.content if hasattr(content_block, 'text')])
+                        st.session_state.messages.append({"role": "assistant", "content": assistant_response})
+                        with st.chat_message("assistant"):
+                            st.markdown(assistant_response)
+                        break
