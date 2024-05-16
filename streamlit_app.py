@@ -7,7 +7,7 @@ st.title("GamsatGPT")
 intro = "Welcome to GamsatGPT. You can ask me to generate any kind of GAMSAT SIII question"
 
 # Load the OpenAi client
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+client = OpenAI(api_key=API_KEY)
 
 # Retrieve the assistant
 assistant = client.beta.assistants.retrieve("asst_3no7SQcpD6vOpUHqMCL2cRUB")
