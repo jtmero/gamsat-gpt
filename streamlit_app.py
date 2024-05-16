@@ -1,13 +1,15 @@
 import streamlit as st
 from openai import OpenAI
 import re
+import os
 
 # Set up the chat
 st.title("GamsatGPT")
 intro = "Welcome to GamsatGPT. You can ask me to generate any kind of GAMSAT SIII question"
 
 # Load the OpenAi client
-client = OpenAI(api_key=API_KEY)
+api_key = os.environ["API_KEY"]
+client = OpenAI(api_key=api_key)
 
 # Retrieve the assistant
 assistant = client.beta.assistants.retrieve("asst_3no7SQcpD6vOpUHqMCL2cRUB")
