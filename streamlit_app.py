@@ -5,7 +5,6 @@ import re
 # Set up the chat
 st.title("GamsatGPT")
 intro = "Welcome to GamsatGPT. You can ask me to generate any kind of GAMSAT SIII question"
-st.markdown("$K_m$ is the Michaelis constant, which is the substrate concentration at which the reaction rate is half of $V_{\max}$.")
 
 # Load the OpenAi client
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
