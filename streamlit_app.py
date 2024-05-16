@@ -2,6 +2,7 @@ from openai import OpenAI
 import streamlit as st
 
 st.title("ChatGPT-like clone")
+intro = "Hi! You can ask me to generate any kind of GAMSAT SIII question"
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
@@ -10,9 +11,7 @@ if "openai_model" not in st.session_state:
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
-intro = "Hi! You can ask me to generate any kind of GAMSAT SIII question"
-st.session_state.messages.append({"role": "assistant", "content": intro})
+    st.session_state.messages.append({"role": "assistant", "content": intro})
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
