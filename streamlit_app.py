@@ -58,5 +58,3 @@ if prompt := st.chat_input("Enter your reply"):
                         
                         # Append this to session state
                         st.session_state.messages.append({"role": "assistant", "content": text_content})
-
-    break
