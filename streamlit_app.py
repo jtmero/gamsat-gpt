@@ -58,7 +58,7 @@ if prompt := st.chat_input("Enter your reply"):
                         text_content = block.text.value
 
                         # Replace any parentheses with '$$' for Latex formatting
-                        text_content = text_content.replace(')','$$').replace('(','$$')
+                        text_content = text_content.replace(')','$$').replace('(','$$').replace('[','$$').replace(']','$$')
 
                         # Display this text in Streamlit
                         st.markdown(text_content)
