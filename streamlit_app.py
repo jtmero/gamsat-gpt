@@ -38,13 +38,14 @@ if prompt := st.chat_input("Enter your reply"):
         content=prompt)
 
     # Generate and display the assistant reply
-    stream = client.beta.threads.runs.create(
-        thread_id=st.session_state.thread_id,
-        assistant_id=assistant.id,
-        stream=True
-    )
+    with st.spinner('Generating response...'):
+        stream = client.beta.threads.runs.create(
+            thread_id=st.session_state.thread_id,
+            assistant_id=assistant.id,
+            stream=True
+        )
     
-    for event in stream:
-        if event.event == "thread.message.completed":
-            response = event.data.content
-            st.markdown(response)
+        for event in stream:
+            if event.event == "thread.message.completed":
+                response = event.data.content
+                st.markdown(response)
