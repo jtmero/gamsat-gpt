@@ -44,8 +44,8 @@ if prompt := st.chat_input("Enter your reply"):
             assistant_id=assistant.id,
         ) as stream:
             for event in stream:
-                if event.get('type') == 'message' and event.get('role') == 'assistant':
-                    assistant_response = event.get('content', '')
+                if event.type == 'message' and event.role == 'assistant':
+                    assistant_response = event.content
                     st.session_state.messages.append({"role": "assistant", "content": assistant_response})
                     with st.chat_message("assistant"):
                         st.markdown(assistant_response)
