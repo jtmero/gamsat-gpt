@@ -13,8 +13,8 @@ if "messages" not in st.session_state:
 
 intro = "Hi! You can ask me to generate any kind of GAMSAT SIII question"
 st.session_state.messages.append({"role": "assistant", "content": intro})
-    with st.chat_message("assistant"):
-        st.markdown(intro)
+with st.chat_message("assistant"):
+    st.markdown(intro)
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
