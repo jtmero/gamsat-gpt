@@ -6,16 +6,21 @@ st.title("ChatGPT-like clone")
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 if "openai_model" not in st.session_state:
-    st.session_state["openai_model"] = "gpt-3.5-turbo"
+    st.session_state["openai_model"] = "gpt-4o"
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
+
+intro = "Hi! You can ask me to generate any kind of GAMSAT SIII question"
+st.session_state.messages.append({"role": "assistant", "content": intro})
+    with st.chat_message("assistant"):
+        st.markdown(intro)
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-if prompt := st.chat_input("What is up?"):
+if prompt := st.chat_input("Enter your reply"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
