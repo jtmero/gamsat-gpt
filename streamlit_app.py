@@ -49,5 +49,4 @@ if prompt := st.chat_input("Enter your reply"):
             if event.event == "thread.message.completed":
                 response = event.data.content
                 st.markdown(response)
-                
-            st.session_state.messages.append({"role": "assistant", "content": response})
+                st.session_state.messages.append({"role": "assistant", "content": response})
