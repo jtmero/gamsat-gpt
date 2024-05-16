@@ -57,18 +57,13 @@ if prompt := st.chat_input("Enter your reply"):
                         # Extract the text from the `value` field
                         text_content = block.text.value
 
-                        # Replace the latex formatting of ChatGPT with that recognised by markdown
-                        # Replace opening "(" optionally preceded by a space and followed by an optional space
-                        text_content = re.sub(r'\s?\(\s?', '$', text_content)
-                
-                        # Replace closing ")" optionally preceded by a space and followed by an optional space
-                        text_content = re.sub(r'\s?\)\s?', '$', text_content)
+                        # Replace "(" or ")" surrounded by any amount of whitespace with "$"
+                        text_content = re.sub(r'\s*\(\s+', '$', text_content)
+                        text_content = re.sub(r'\s+\)\s*', '$', text_content)
                         
-                        # Replace opening "[" optionally preceded by a space and followed by an optional space
-                        text_content = re.sub(r'\s?\[\s?', '$$', text_content)
-                        
-                        # Replace closing "]" optionally preceded by a space and followed by an optional space
-                        text_content = re.sub(r'\s?\]\s?', '$$', text_content)
+                        # Replace "[" or "]" surrounded by any amount of whitespace with "$$"
+                        text_content = re.sub(r'\s*\[\s+', '$$', text_content)
+                        text_content = re.sub(r'\s+\]\s*', '$$', text_content)
                         
                         # Display this text in Streamlit
                         st.markdown(text_content)
