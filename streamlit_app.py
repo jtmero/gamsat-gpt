@@ -51,8 +51,8 @@ if prompt := st.chat_input("Enter your reply"):
                 for block in response:
                     if block.type == 'text':
                     # Extract the text from the `value` field
-                    text_content = block.text.value
+                        text_content = block.text.value
                     # Display this text in Streamlit
-                    st.markdown(text_content)
+                        st.markdown(text_content)
                     # Optionally append this to your session state or another structure
-                    st.session_state.messages.append({"role": "assistant", "content": text_content})
+                        st.session_state.messages.append({"role": "assistant", "content": text_content})
