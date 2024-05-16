@@ -46,5 +46,5 @@ if prompt := st.chat_input("Enter your reply"):
     
     for event in stream:
         if event.event == "thread.message.completed":
-            response = event.data.delta.content
+            response = event.data.content
             st.markdown(response)
