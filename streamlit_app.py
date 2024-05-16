@@ -36,26 +36,3 @@ if prompt:
         with st.chat_message("assistant"):
             question = st.write_stream(stream.text_deltas)
             stream.until_done()
-
-    # Ask the user to give an answer
-    answer = st.chat_input("What's your answer?")
-    if answer:
-    # Display the user's question
-        with st.chat_message("user"):
-            st.write(answer)
-        
-        # Add to the thread
-        response_message = openai_client.beta.threads.messages.create(
-            thread_id=thread.id,
-            role="user",
-            content=answer
-        )
-
-        # Continue streaming to get reasoning
-        with openai_client.beta.threads.runs.stream(
-            thread_id=thread.id,
-            assistant_id=assistant.id,
-        ) as stream:
-            with st.chat_message("assistant"):
-                reasoning = st.write_stream(stream.text_deltas)
-                stream.until_done()
