@@ -12,6 +12,23 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 # Retrieve the assistant
 assistant = client.beta.assistants.retrieve("asst_3no7SQcpD6vOpUHqMCL2cRUB")
 
+text = """
+( k ) is the rate constant,
+( A ) is the pre-exponential factor,
+( E_a ) is the activation energy,
+( R ) is the universal gas constant ((8.314 , \text{J/mol·K})),
+( T ) is the temperature in Kelvin.
+Consider a reaction with an activation energy ( E_a ) of ( 50 , \text{kJ/mol} ) and a pre-exponential factor ( A ) of ( 1.2 \times 10^{13} , \text{s}^{-1} ).
+
+Question:
+Calculate the rate constant ( k ) at a temperature of ( 300 , \text{K} ).
+
+Options:
+A) ( 1.2 \times 10^{-4} , \text{s}^{-1} )
+B) ( 3.5 \times 10^{-5} , \text{s}^{-1} )
+C) ( 2.5 \times 10^{-6} , \text{s}^{-1} )
+"""
+
 # Initialize session state
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-4o"
@@ -58,7 +75,7 @@ if prompt := st.chat_input("Enter your reply"):
                         text_content = block.text.value
 
                         # Replace "(" or ")" surrounded by any amount of whitespace with "$"
-                        text_content = re.sub(r'\s+\)', '$', text_content)
+                        text_content = re.sub(r'\s+\)', '$', text)
                         
                         # Display this text in Streamlit
                         st.markdown(text_content)
