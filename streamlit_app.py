@@ -1,5 +1,6 @@
 import streamlit as st
 from openai import OpenAI
+import re
 
 # Set up the chat
 st.title("GamsatGPT")
