@@ -59,7 +59,7 @@ if prompt := st.chat_input("Enter your reply"):
                         #text_content = "( A ) and [ B ]," ### Using to test output modification
 
                         # Replace "(" or ")" surrounded by any amount of whitespace with "$"
-                        text_content = text_content.replace(')','$').replace('(','$')
+                        text_content = text_content.replace(')','$$').replace('(','$$')
                         
                         # Display this text in Streamlit
                         st.markdown(text_content, unsafe_allow_html=True)
