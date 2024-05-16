@@ -44,15 +44,20 @@ if prompt := st.chat_input("Enter your reply"):
             assistant_id=assistant.id,
             stream=True
         )
-    
+
+        # Loop through the streamed events to find the completed message
         for event in stream:
             if event.event == "thread.message.completed":
                 response = event.data.content
+
+                # Loop through the elements to find the text type response
                 for block in response:
                     if block.type == 'text':
                         # Extract the text from the `value` field
                         text_content = block.text.value
-                        
+
+                        # Replace the latex formatting of ChatGPT with that recognised by markdown
+                        text_conte = text_content.replace("(", "$").replace(")", "$").replace("[", "$$").replace("]", "$$")
                         # Display this text in Streamlit
                         st.markdown(text_content)
                         
