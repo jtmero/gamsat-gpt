@@ -23,15 +23,17 @@ if 'prompt' not in st.session_state:
     st.session_state.prompt = None
 if 'answer' not in st.session_state:
     st.session_state.answer = None
+if 'awaiting_answer' not in st.session_state:
+    st.session_state.awaiting_answer = False
 
-# Create a chat input for the prompt
+# Step 1: Get the prompt from the user
 if st.session_state.prompt is None:
     prompt = st.chat_input("Why don't you ask me to make you a question?")
     if prompt:
         st.session_state.prompt = prompt
         st.experimental_rerun()
 
-# Display the user's question and get the assistant's response
+# Step 2: Display the user's question and get the assistant's response
 if st.session_state.prompt and st.session_state.thread_id is None:
     with st.chat_message("user"):
         st.write(st.session_state.prompt)
@@ -50,16 +52,18 @@ if st.session_state.prompt and st.session_state.thread_id is None:
         with st.chat_message("assistant"):
             question = st.write_stream(stream.text_deltas)
             stream.until_done()
+
+    st.session_state.awaiting_answer = True
     st.experimental_rerun()
 
-# Ask the user to give an answer
-if st.session_state.prompt and st.session_state.thread_id and st.session_state.answer is None:
+# Step 3: Ask the user to give an answer
+if st.session_state.awaiting_answer and st.session_state.answer is None:
     answer = st.chat_input("What's your answer?")
     if answer:
         st.session_state.answer = answer
         st.experimental_rerun()
 
-# Display the user's answer and get the assistant's reasoning
+# Step 4: Display the user's answer and get the assistant's reasoning
 if st.session_state.answer:
     with st.chat_message("user"):
         st.write(st.session_state.answer)
@@ -83,4 +87,6 @@ if st.session_state.answer:
     # Reset state for next interaction
     st.session_state.prompt = None
     st.session_state.answer = None
-   
+    st.session_state.thread_id = None
+    st.session_state.awaiting_answer = False
+    st.experimental_rerun()
