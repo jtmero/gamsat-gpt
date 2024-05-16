@@ -1,37 +1,33 @@
+from openai import OpenAI
 import streamlit as st
-import openai
 
-# Set API key from Streamlit secrets
-api_key = st.secrets["OPENAI_API_KEY"]
+st.title("ChatGPT-like clone")
 
-# Create an OpenAI client with your API key
-openai_client = openai.Client(api_key=api_key)
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-# Retrieve the assistant you want to use
-assistant = openai_client.beta.assistants.retrieve("asst_3no7SQcpD6vOpUHqMCL2cRUB")
-assistant_id = assistant.id  # Extract assistant ID
+if "openai_model" not in st.session_state:
+    st.session_state["openai_model"] = "gpt-3.5-turbo"
 
-# Create the title and subheader for the Streamlit page
-st.title("GamsatGPT")
-st.subheader("You can ask me to generate any kind of GAMSAT SIII question")
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-# Create a chat input for the prompt
-prompt = st.chat_input("Why don't you ask me to make you a question?")
-if prompt:
-    # Display the user's question
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+if prompt := st.chat_input("What is up?"):
+    st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
-        st.write(prompt)
-        
-    # Create a new thread
-    thread = openai_client.beta.threads.create(
-        messages=[{"role": "user", "content": prompt}]
-    )
+        st.markdown(prompt)
 
-    # Stream a run
-    with openai_client.beta.threads.runs.stream(
-        thread_id=thread.id,
-        assistant_id=assistant.id,
-    ) as stream:
-        with st.chat_message("assistant"):
-            question = st.write_stream(stream.text_deltas)
-            stream.until_done()
+    with st.chat_message("assistant"):
+        stream = client.chat.completions.create(
+            model=st.session_state["openai_model"],
+            messages=[
+                {"role": m["role"], "content": m["content"]}
+                for m in st.session_state.messages
+            ],
+            stream=True,
+        )
+        response = st.write_stream(stream)
+    st.session_state.messages.append({"role": "assistant", "content": response})
