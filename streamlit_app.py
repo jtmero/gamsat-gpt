@@ -60,7 +60,8 @@ if prompt := st.chat_input("Enter your reply"):
 
                         # Replace "(" or ")" surrounded by any amount of whitespace with "$"
                         text_content = text_content.replace(')','$$').replace('(','$$')
-                        
+
+                        text_content = "abc"
                         # Display this text in Streamlit
                         st.markdown(type(text_content))
                         
