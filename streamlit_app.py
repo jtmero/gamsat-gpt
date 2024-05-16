@@ -42,6 +42,5 @@ if prompt := st.chat_input("Enter your reply"):
         with client.beta.threads.runs.stream(
             thread_id=thread.id,
             assistant_id=assistant.id,
-            event_handler=event_handler,
         ) as stream:
             stream.until_done()
