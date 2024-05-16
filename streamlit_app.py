@@ -57,7 +57,16 @@ if prompt := st.chat_input("Enter your reply"):
                         text_content = block.text.value
 
                         # Replace the latex formatting of ChatGPT with that recognised by markdown
-
+                        # Regex to replace "(" or "( " with "$"
+                        text_content = re.sub(r'\(\s?', r'$', text_content)
+                        # Regex to replace ")" or " )" with "$"
+                        text_content = re.sub(r'\s?\)', r'$', text_content)
+                
+                        # Regex to replace "[" or "[ " with "$$"
+                        text_content = re.sub(r'\[\s?', r'$$', text_content)
+                        # Regex to replace "]" or " ]" with "$$"
+                        text_content = re.sub(r'\s?\]', r'$$', text_content)
+                        
                         # Display this text in Streamlit
                         st.markdown(text_content)
                         
