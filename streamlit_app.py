@@ -5,14 +5,17 @@ import os
 
 # Set up the chat
 st.title("GamsatGPT")
-intro = "Welcome to GamsatGPT. You can ask me to generate any kind of GAMSAT SIII question"
+intro = "Welcome to GamsatGPT. Ask me to make you a question!"
 
-# Load the OpenAi client
+# Load the environment variables
 api_key = os.environ["API_KEY"]
+asst_id = os.environ["ASST_ID"]
+
+# Load the client
 client = OpenAI(api_key=api_key)
 
 # Retrieve the assistant
-assistant = client.beta.assistants.retrieve("asst_3no7SQcpD6vOpUHqMCL2cRUB")
+assistant = client.beta.assistants.retrieve(asst_id)
 
 # Initialize session state
 if "openai_model" not in st.session_state:
