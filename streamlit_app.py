@@ -4,7 +4,7 @@ import re
 import os
 
 # Make window load in wide mode
-
+st.title("GamsatGPT")
 
 # Set up the chat
 def wide_space_default():
