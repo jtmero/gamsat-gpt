@@ -4,12 +4,13 @@ import re
 import os
 
 # Make window load in wide mode
-def wide_space_default():
-    st.set_page_config(layout=“wide”)
-wide_space_default()
+
 
 # Set up the chat
-st.title("GamsatGPT")
+def wide_space_default():
+    st.set_page_config(layout=“wide”, page_title="GamsatGPT")
+wide_space_default()
+
 intro = "Welcome to GamsatGPT. Ask me to make you a question!"
 
 # Load the environment variables
