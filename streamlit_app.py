@@ -4,7 +4,7 @@ import re
 import os
 
 # Set up the chat
-st.title("GamsatGPT")
+st.set_page_config(page_title="GamsatGPT", layout="wide", initial_sidebar_state="auto")
 intro = "Welcome to GamsatGPT. Ask me to make you a question!"
 
 # Load the environment variables
