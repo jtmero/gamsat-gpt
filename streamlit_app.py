@@ -3,8 +3,13 @@ from openai import OpenAI
 import re
 import os
 
+# Make window load in wide mode
+def wide_space_default():
+    st.set_page_config(layout=“wide”)
+wide_space_default()
+
 # Set up the chat
-st.set_page_config(page_title="GamsatGPT", layout="wide", initial_sidebar_state="auto")
+st.title("GamsatGPT")
 intro = "Welcome to GamsatGPT. Ask me to make you a question!"
 
 # Load the environment variables
