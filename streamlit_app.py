@@ -5,7 +5,7 @@ import os
 
 # Set up the chat
 def wide_space_default():
-    st.set_page_config(layout=“wide”, page_title="GamsatGPT")
+    st.set_page_config(layout="wide", page_title="GamsatGPT")
 wide_space_default()
 
 intro = "Welcome to GamsatGPT. Ask me to make you a question!"
