@@ -4,7 +4,6 @@ import re
 import os
 
 # Set up the chat
-st.set_page_config(layout="wide")
 st.title("GamsatGPT")
 st.subheader("Ask me to make you a question!")
 
