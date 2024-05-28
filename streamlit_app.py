@@ -5,7 +5,7 @@ import os
 
 # Set up the chat
 st.title("GamsatGPT")
-intro = "Welcome to GamsatGPT. Ask me to make you a question!"
+st.subheader("Ask me to make you a question!")
 
 # Load the environment variables
 api_key = os.environ["API_KEY"]
@@ -19,7 +19,7 @@ assistant = client.beta.assistants.retrieve(asst_id)
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-4o"
 if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "assistant", "content": intro}]
+    st.session_state.messages = []
 if "thread_id" not in st.session_state:
     thread = client.beta.threads.create()
     st.session_state.thread_id = thread.id
