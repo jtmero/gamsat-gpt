@@ -4,6 +4,7 @@ import re
 import os
 
 # Set up the chat
+st.set_page_config(layout="wide")
 st.title("GamsatGPT")
 st.subheader("Ask me to make you a question!")
 
@@ -66,4 +67,3 @@ if prompt := st.chat_input("Enter your reply"):
                         # Display this text in Streamlit
                         with st.chat_message("assistant"):
                             st.markdown(text_content)
-                        
