@@ -11,10 +11,8 @@ intro = "Welcome to GamsatGPT. Ask me to make you a question!"
 api_key = os.environ["API_KEY"]
 asst_id = os.environ["ASST_ID"]
 
-# Load the client
+# Load the client and retrieve the assistant
 client = OpenAI(api_key=api_key)
-
-# Retrieve the assistant
 assistant = client.beta.assistants.retrieve(asst_id)
 
 # Initialize session state
@@ -62,8 +60,10 @@ if prompt := st.chat_input("Enter your reply"):
                         # Extract the text from the `value` field
                         text_content = block.text.value
 
-                        # Display this text in Streamlit
-                        st.markdown(text_content)
-                        
                         # Append this to session state
                         st.session_state.messages.append({"role": "assistant", "content": text_content})
+                        
+                        # Display this text in Streamlit
+                        with st.chat_message("assistant"):
+                            st.markdown(text_content)
+                        
