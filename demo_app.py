@@ -1,7 +1,5 @@
 import streamlit as st
-from openai import OpenAI
-import re
-import os
+import time
 
 # Set up the chat
 st.title("GamsatGPT")
@@ -11,6 +9,10 @@ st.subheader("Ask me to make you a question!")
 if prompt := st.chat_input("Enter your reply"):
     with st.chat_message("user"):
         st.markdown(prompt)
+
+    # Simulate a delay with spinner
+    with st.spinner('Generating response...'):
+        time.sleep(2)  # Simulate a delay of 2 seconds
 
     # Display text
     with st.chat_message("assistant"):
