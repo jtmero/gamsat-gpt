@@ -7,62 +7,24 @@ import os
 st.title("GamsatGPT")
 st.subheader("Ask me to make you a question!")
 
-# Load the environment variables
-api_key = os.environ["API_KEY"]
-asst_id = os.environ["ASST_ID"]
-
-# Load the client and retrieve the assistant
-client = OpenAI(api_key=api_key)
-assistant = client.beta.assistants.retrieve(asst_id)
-
-# Initialize session state
-if "openai_model" not in st.session_state:
-    st.session_state["openai_model"] = "gpt-4o"
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-if "thread_id" not in st.session_state:
-    thread = client.beta.threads.create()
-    st.session_state.thread_id = thread.id
-
-# Display messages
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
 # User input
 if prompt := st.chat_input("Enter your reply"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Append the prompt to the existing thread
-    client.beta.threads.messages.create(
-        thread_id=st.session_state.thread_id,
-        role="user",
-        content=prompt)
+    # Display text
+    with st.chat_message("assistant"):
+        st.markdown("Sure, let's dive into a challenging scientific reasoning question.
 
-    # Generate and display the assistant reply
-    with st.spinner('Generating response...'):
-        stream = client.beta.threads.runs.create(
-            thread_id=st.session_state.thread_id,
-            assistant_id=assistant.id,
-            stream=True
-        )
+Stem
+In recent research on quantum entanglement, scientists have been investigating the phenomenon of non-locality and its implications on information transfer. One of the experiments involves entangled particles A and B, where particle A is kept on Earth and particle B is sent to a satellite orbiting the planet. The entanglement is such that measuring a property (e.g., spin) of particle A immediately determines the corresponding property of particle B, regardless of the distance between them. This phenomenon appears to contradict classical theories that information cannot travel faster than the speed of light. Critics argue that hidden variables could explain this phenomenon without violating relativity principles. In this experiment, the observation of spin states is conducted under varying experimental conditions, including different distances between the particles, different materials used in the measurement apparatus, and varying atmospheric conditions. The scientists record the frequency of correlations between the states of particles A and B, noting that the observed synchronization does not diminish with increased distance or environmental noise. They hypothesize that the entanglement is robust enough to resist any local interference, suggesting a fundamental aspect of quantum mechanics.
 
-        # Loop through the streamed events to find the completed message
-        for event in stream:
-            if event.event == "thread.message.completed":
-                response = event.data.content
+Question
+Which of the following statements most accurately reflects the implications of the experiment on quantum entanglement and information transfer?
 
-                # Loop through the elements to find the text type response
-                for block in response:
-                    if block.type == 'text':
-                        # Extract the text from the `value` field
-                        text_content = block.text.value
+A. The experiment demonstrates that information can travel faster than the speed of light.
+B. The results suggest that quantum entanglement is not affected by local environmental factors.
+C. The findings support the existence of hidden variables that explain the synchronization of entangled particles.
+D. The outcomes indicate that quantum entanglement may be fundamentally flawed due to unresolved noise interference issues.
 
-                        # Append this to session state
-                        st.session_state.messages.append({"role": "assistant", "content": text_content})
-                        
-                        # Display this text in Streamlit
-                        with st.chat_message("assistant"):
-                            st.markdown(text_content)
+Can you find any evidence supporting or opposing option A?")
