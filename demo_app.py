@@ -3,16 +3,16 @@ import time
 
 # Set up the chat
 st.title("GamsatGPT")
-st.subheader("Ask me to make you a question!")
+st.subheader("Why don't you try out this demo?")
 
 # User input
-if prompt := st.chat_input("Enter your reply"):
+if prompt := st.chat_input("Ask me to make you a question"):
     with st.chat_message("user"):
         st.markdown(prompt)
 
     # Simulate a delay with spinner
     with st.spinner('Generating response...'):
-        time.sleep(2)  # Simulate a delay of 2 seconds
+        time.sleep(4)  # Simulate a delay of 2 seconds
 
     # Display text
     with st.chat_message("assistant"):
