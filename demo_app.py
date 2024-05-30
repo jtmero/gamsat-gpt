@@ -49,7 +49,7 @@ d) The higher proportion of methane in combination with other trace gases could 
 
 """)
     # Provide a predefined response
-     with st.chat_message("assistant"):
+    with st.chat_message("assistant"):
          time.sleep(1)
          st.markdown("After presenting the question, I would instruct you to look for evidence supporting or opposing answer A, before working through each of the other options.")
 
