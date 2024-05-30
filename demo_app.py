@@ -3,7 +3,7 @@ import time
 
 # Set up the chat
 st.title("GamsatGPT")
-st.subheader("Why don't you try out this demo?")
+st.subheader("Why don't you try out this demo and ask me to make you a question?")
 
 # User input
 if prompt := st.chat_input("Ask me to make you a question"):
