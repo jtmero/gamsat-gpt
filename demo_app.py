@@ -64,16 +64,16 @@ d) The higher proportion of methane in combination with other trace gases could 
             st.session_state.messages.append({"role": "assistant", "content": question})
 
         # Provide a predefined response
-        response = "After presenting the question, I would instruct you to look for evidence supporting or opposing answer A, before working through each of the other options."
+        response = "After presenting the question, I would instruct you to look for evidence supporting or opposing answer A, before working through each of the other options. However, if you get stuck, I can help direct you towards relevant areas of them stem and ask you questions to prompt your critical thinking."
         with st.chat_message("assistant"):
             time.sleep(1)
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
 
         with st.spinner('Generating response...'):
-            time.sleep(3)
+            time.sleep(2)
             
-        response = "However, if you get stuck, I can help direct you towards relevant areas of them stem and ask you questions to prompt your critical thinking. When you're ready, why don't you tell me you are stuck and need some help?"
+        response = "When you're ready, why don't you tell me you are stuck and need some help?"
         with st.chat_message("assistant"):
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
@@ -118,17 +118,23 @@ elif st.session_state.step == 3:
             time.sleep(2)
 
         response = """
-Hopefully that helped, we would then do a similar process with the other options to help you build your ability to critically evaluate the evidence provided.
-After going through all of the options, I would ask you what you think the correct answer is, and generate something like this...
+Hopefully that helped direct your focus on which parts of the stem are relevant. We would then do a similar process with the other options to help you build your ability to critically evaluate the evidence provided.
+After going through all of the options, I would ask you what you think the correct answer is, why don't you have a go?
 """
-        with st.chat_message("assistant"):
-            st.markdown(response)
-            st.session_state.messages.append({"role": "assistant", "content": response})
-        
+        st.session_state.step = 4
+        st.experimental_rerun()
+
+elif st.session_state.step == 4:
+    # Fourth user input
+    if fourth_prompt := st.chat_input("Enter your reply here...", key="fourth_input"):
+        with st.chat_message("user"):
+            st.markdown(fourth_prompt)
+            st.session_state.messages.append({"role": "user", "content": fourth_prompt})
+
         # Simulate a delay with spinner
         with st.spinner('Generating response...'):
             time.sleep(4)
-    
+
         response = """
 ## Detailed Response ## 
 
@@ -151,10 +157,10 @@ I would conclude my response by asking if you struggled with anything in this qu
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
 
-        st.session_state.step = 4
+        st.session_state.step = 5
         st.experimental_rerun()
 
-elif st.session_state.step == 4:
+elif st.session_state.step == 5:
     # Final user input
     if final_prompt := st.chat_input("Enter your reply here...", key="final_input"):
         with st.chat_message("user"):
