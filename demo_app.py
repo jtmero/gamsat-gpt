@@ -11,7 +11,7 @@ st.subheader("Why don't you try out this demo and ask me to make you a question?
 
 if st.session_state.step == 1:
     with st.chat_message("assistant"):
-        st.markdown("This is an automated demo, I'll show you an example of a question that I generated as well as how you can interact with me")
+        st.markdown("This is an automated demo, I'll show you an example of a question that I generated as well as how you can interact with me. When you're ready, ask me to make you a question!")
     
     # First user input
     if prompt := st.chat_input("Ask me to make you a question", key="first_input"):
@@ -59,7 +59,7 @@ Can you find any evidence supporting or opposing option A?
         with st.chat_message("assistant"):
             st.markdown("However, if you get stuck, I can help direct you towards relevant areas of them stem and ask you questions to prompt your critical thinking.")
             time.sleep(2)
-            st.markdown("When you're ready, why don't you tell me you are stuck and need some help?")
+            st.markdown("Feel free to take your time and have a read of the question. When you're ready, why don't you tell me you are stuck and need some help?")
         
         st.session_state.step = 2
 
