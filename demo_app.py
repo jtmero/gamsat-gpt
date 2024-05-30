@@ -9,7 +9,7 @@ with st.chat_message("assistant"):
     st.markdown("This is an automated demo, I'll show you an example of a question that I generated as well as how you can interact with me")
         
 # User input
-if prompt := st.chat_input("Ask me to make you a question"):
+if prompt := st.chat_input("Ask me to make you a question", key="first_input"):
     with st.chat_message("user"):
         st.markdown(prompt)
 
@@ -27,31 +27,26 @@ if prompt := st.chat_input("Ask me to make you a question"):
     # Display text
     with st.chat_message("assistant"):
         st.markdown("""
-## Question Stem ##
-
-A new planet, Exo-415, was discovered in a distant galaxy and has caught the attention of astronomers due to its unique atmospheric composition and unusual gravitational forces. Exo-415 has a significantly higher proportion of methane $𝐶𝐻_4$ than Earth, constituting approximately 40% of its atmosphere, followed by nitrogen $𝑁_2$ at 35%, and various trace gases making up the rest. Despite the high methane concentration, measurements have shown that the surface temperature of Exo-415 is lower than Earth's. Furthermore, this planet has a gravitational pull 1.5 times stronger than Earth's, suggesting a higher density.
-
-Studies have also indicated that the planet's rotation period is quite short: a day on Exo-415 is only 6 hours long, which leads to extreme differences in temperature between the day and night sides. Researchers hypothesize that the rapid rotation might be influencing atmospheric dynamics in ways not seen on Earth. Additionally, the high methane levels have been linked to an unknown biological activity unique to Exo-415, showing a potential for extraterrestrial life.
-
-With these observations in mind, consider the following hypotheses on why the surface temperature of Exo-415 is lower than that of Earth:
+Given these conditions, consider the effects of depolarizing noise on the entanglement of photon pairs and their subsequent measurement outcomes. Furthermore, analyze how these influences align with various quantum mechanical principles and interpretations, including the collapse of the wavefunction and non-locality.
 
 ## Question ##
+Given the experimental conditions described, which of the following statements is most likely correct regarding the correlation of measurement outcomes at locations A and B?
 
-Which hypothesis most plausibly explains why the surface temperature of Exo-415 is lower than Earth's, despite the high methane concentration?
+#### Options: ####
+A. If the depolarizing noise parameter 𝑝 is high, the measurement outcomes at A and B will show no correlation.
 
-a) The high atmospheric methane concentration on Exo-415 suggests strong greenhouse effects, which should logically result in higher surface temperatures, contradicting the measurements.
+B. Regardless of the depolarizing noise parameter 𝑝, the measurement outcomes at A and B will remain perfectly correlated due to the nature of entanglement.
 
-b) The intense gravitational pull (1.5 times stronger than Earth's) compresses the atmosphere more, increasing its density, which might result in efficient heat radiation into space.
+C. The correlation between the measurement outcomes at A and B decreases as the depolarizing noise parameter 𝑝 increases, but does not completely disappear even at 𝑝=1.
 
-c) The rapid rotation of Exo-415 (6-hour days) could lead to severe winds, distributing heat unevenly and leading to cooler average temperatures.
+D. If the depolarizing noise parameter 𝑝 is low, the measurement outcomes at A and B will be perfectly correlated, but as 𝑝 increases, these correlations diminish and eventually become random.
 
-d) The higher proportion of methane in combination with other trace gases could result in more efficient absorption and radiation of heat, maintaining a cooler overall temperature.
-
+Can you find any evidence supporting or opposing option A?
 """)
     # Provide a predefined response
     with st.chat_message("assistant"):
-         time.sleep(1)
-         st.markdown("After presenting the question, I would instruct you to look for evidence supporting or opposing answer A, before working through each of the other options.")
+        time.sleep(1)
+        st.markdown("After presenting the question, I would instruct you to look for evidence supporting or opposing answer A, before working through each of the other options.")
 
     with st.spinner('Generating response...'):
         time.sleep(3)
@@ -62,7 +57,7 @@ d) The higher proportion of methane in combination with other trace gases could 
         st.markdown("When you're ready, why don't you tell me you are stuck and need some help?")
         
 # Add a second user input
-if second_prompt := st.chat_input("Enter your reply here..."):
+if second_prompt := st.chat_input("Enter your reply here...", key="second_input"):
     with st.chat_message("user"):
         st.markdown(second_prompt)
 
@@ -78,7 +73,7 @@ Option A suggests that the high atmospheric methane concentration should result 
 Does this help you find evidence whether option A is supported or opposed?""")
 
 # Add a third user input
-if third_prompt := st.chat_input("Enter your reply here..."):
+if third_prompt := st.chat_input("Enter your reply here...", key="third_input"):
     with st.chat_message("user"):
         st.markdown(third_prompt)
 
@@ -115,7 +110,7 @@ I would conclude my response by asking if you struggled with anything in this qu
 """)
 
 # Add a final user input
-if final_prompt := st.chat_input("Enter your reply here..."):
+if final_prompt := st.chat_input("Enter your reply here...", key="final_input"):
     with st.chat_message("user"):
         st.markdown(final_prompt)
 
@@ -132,7 +127,7 @@ if final_prompt := st.chat_input("Enter your reply here..."):
     * Summarize complex information. For example, jot down relevant points like atmospheric composition, gravitational pull, rotation period, and any unique phenomena like biological activity.
 2. Evaluate Each Option Separately:
     * For each multiple-choice option, compare it directly with evidence presented in the stem. Ask yourself how the information supports or opposes the given option.
-    * Look for explicit and implicit clues. Some evidence might not directly state the answer but implies it through logical connections.
+    * Look for explicit and implicit clues. Some evidence might not directly state the answer but implies it
 3. Consider Contradictions:
     * If an option seems reasonable at first glance, double-check to see if any stem information directly contradicts it. This helps eliminate options more confidently.
     * Understand the natural behaviors of scientific concepts (like methane's greenhouse effect) and see if the option aligns logically with these well-known behaviors.
