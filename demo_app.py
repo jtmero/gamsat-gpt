@@ -24,7 +24,7 @@ if prompt := st.chat_input("Ask me to make you a question"):
     # Display text
     with st.chat_message("assistant"):
         st.markdown("""
-**Problem Stem:**
+##Problem Stem:##
 In quantum mechanics, the phenomenon known as quantum entanglement occurs when two or more particles become so deeply linked that the state of one particle instantaneously influences the state of the other, regardless of the distance between them. This peculiar behavior has puzzled scientists and led to various interpretations, including the famous EPR (Einstein-Podolsky-Rosen) paradox, which questioned the completeness of quantum mechanics.
 
 Consider an experimental setup where a pair of entangled photons is generated. The photons travel to two separate locations, A and B, where their polarizations are measured along specific axes. According to quantum mechanics, the measurement outcomes at A and B are perfectly correlated.
@@ -35,7 +35,7 @@ Given these conditions, consider the effects of depolarizing noise on the entang
 
 Question: Given the experimental conditions described, which of the following statements is most likely correct regarding the correlation of measurement outcomes at locations A and B?
 
-**Options:**
+##Options:##
 A. If the depolarizing noise parameter 𝑝 is high, the measurement outcomes at A and B will show no correlation.
 
 B. Regardless of the depolarizing noise parameter 𝑝, the measurement outcomes at A and B will remain perfectly correlated due to the nature of entanglement.
