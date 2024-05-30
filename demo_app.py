@@ -6,8 +6,6 @@ if 'messages' not in st.session_state:
     st.session_state.messages = []
 if 'step' not in st.session_state:
     st.session_state.step = 1
-if 'intro_displayed' not in st.session_state:
-    st.session_state.intro_displayed = False
 
 # Function to display chat history
 def display_chat():
@@ -17,15 +15,7 @@ def display_chat():
 
 # Set up the chat
 st.title("GamsatGPT")
-st.subheader("Why don't you try out this demo and ask me to make you a question?")
-
-# Display intro message if not already displayed
-if not st.session_state.intro_displayed:
-    with st.chat_message("assistant"):
-        intro = "This is an automated demo, I'll show you an example of a question that I generated as well as how you can interact with me"
-        st.markdown(intro)
-        st.session_state.messages.append({"role": "assistant", "content": intro})
-    st.session_state.intro_displayed = True
+st.subheader("Try this demo and see the kinds of questions and responses that can be generated.")
 
 # Display chat history
 display_chat()
@@ -39,7 +29,7 @@ if st.session_state.step == 1:
 
         # Simulate a delay with spinner
         with st.spinner('Generating response...'):
-            time.sleep(1)
+            time.sleep(2)
 
         response = "Certainly, here is a response I generated earlier..."
         with st.chat_message("assistant"):
@@ -52,21 +42,22 @@ if st.session_state.step == 1:
 
         # Display text
         question = """
-Given these conditions, consider the effects of depolarizing noise on the entanglement of photon pairs and their subsequent measurement outcomes. Furthermore, analyze how these influences align with various quantum mechanical principles and interpretations, including the collapse of the wavefunction and non-locality.
+### Problem Stem ###
 
-## Question ##
-Given the experimental conditions described, which of the following statements is most likely correct regarding the correlation of measurement outcomes at locations A and B?
+A new planet, Exo-415, was discovered in a distant galaxy and has caught the attention of astronomers due to its unique atmospheric composition and unusual gravitational forces. Exo-415 has a significantly higher proportion of methane ($CH_4$) than Earth, constituting approximately 40% of its atmosphere, followed by nitrogen ($N_2$) at 35%, and various trace gases making up the rest. Despite the high methane concentration, measurements have shown that the surface temperature of Exo-415 is lower than Earth's. Furthermore, this planet has a gravitational pull 1.5 times stronger than Earth's, suggesting a higher density.
 
-#### Options: ####
-A. If the depolarizing noise parameter 𝑝 is high, the measurement outcomes at A and B will show no correlation.
+Studies have also indicated that the planet's rotation period is quite short: a day on Exo-415 is only 6 hours long, which leads to extreme differences in temperature between the day and night sides. Researchers hypothesize that the rapid rotation might be influencing atmospheric dynamics in ways not seen on Earth. Additionally, the high methane levels have been linked to an unknown biological activity unique to Exo-415, showing a potential for extraterrestrial life.
 
-B. Regardless of the depolarizing noise parameter 𝑝, the measurement outcomes at A and B will remain perfectly correlated due to the nature of entanglement.
+With these observations in mind, consider the following hypotheses on why the surface temperature of Exo-415 is lower than that of Earth:
 
-C. The correlation between the measurement outcomes at A and B decreases as the depolarizing noise parameter 𝑝 increases, but does not completely disappear even at 𝑝=1.
+### Question ###
 
-D. If the depolarizing noise parameter 𝑝 is low, the measurement outcomes at A and B will be perfectly correlated, but as 𝑝 increases, these correlations diminish and eventually become random.
+Which hypothesis most plausibly explains why the surface temperature of Exo-415 is lower than Earth's, despite the high methane concentration?
+a) The high atmospheric methane concentration on Exo-415 suggests strong greenhouse effects, which should logically result in higher surface temperatures, contradicting the measurements.
+b) The intense gravitational pull (1.5 times stronger than Earth's) compresses the atmosphere more, increasing its density, which might result in efficient heat radiation into space.
+c) The rapid rotation of Exo-415 (6-hour days) could lead to severe winds, distributing heat unevenly and leading to cooler average temperatures.
+d) The higher proportion of methane in combination with other trace gases could result in more efficient absorption and radiation of heat, maintaining a cooler overall temperature.
 
-Can you find any evidence supporting or opposing option A?
 """
         with st.chat_message("assistant"):
             st.markdown(question)
@@ -75,6 +66,7 @@ Can you find any evidence supporting or opposing option A?
         # Provide a predefined response
         response = "After presenting the question, I would instruct you to look for evidence supporting or opposing answer A, before working through each of the other options."
         with st.chat_message("assistant"):
+            time.sleep(1)
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
 
