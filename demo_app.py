@@ -17,15 +17,16 @@ def display_chat():
 st.title("GamsatGPT")
 st.subheader("Why don't you try out this demo and ask me to make you a question?")
 
+# Intro message
+with st.chat_message("assistant"):
+    intro = "This is an automated demo, I'll show you an example of a question that I generated as well as how you can interact with me"
+    st.markdown(intro)
+    st.session_state.messages.append({"role": "assistant", "content": intro})
+    
 # Display chat history
 display_chat()
 
 if st.session_state.step == 1:
-    with st.chat_message("assistant"):
-        intro = "This is an automated demo, I'll show you an example of a question that I generated as well as how you can interact with me"
-        st.markdown(intro)
-        st.session_state.messages.append({"role": "assistant", "content": intro})
-    
     # First user input
     if prompt := st.chat_input("Ask me to make you a question", key="first_input"):
         with st.chat_message("user"):
