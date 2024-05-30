@@ -6,6 +6,8 @@ if 'messages' not in st.session_state:
     st.session_state.messages = []
 if 'step' not in st.session_state:
     st.session_state.step = 1
+if 'intro_displayed' not in st.session_state:
+    st.session_state.intro_displayed = False
 
 # Function to display chat history
 def display_chat():
@@ -17,12 +19,14 @@ def display_chat():
 st.title("GamsatGPT")
 st.subheader("Why don't you try out this demo and ask me to make you a question?")
 
-# Intro message
-with st.chat_message("assistant"):
-    intro = "This is an automated demo, I'll show you an example of a question that I generated as well as how you can interact with me"
-    st.markdown(intro)
-    st.session_state.messages.append({"role": "assistant", "content": intro})
-    
+# Display intro message if not already displayed
+if not st.session_state.intro_displayed:
+    with st.chat_message("assistant"):
+        intro = "This is an automated demo, I'll show you an example of a question that I generated as well as how you can interact with me"
+        st.markdown(intro)
+        st.session_state.messages.append({"role": "assistant", "content": intro})
+    st.session_state.intro_displayed = True
+
 # Display chat history
 display_chat()
 
@@ -198,4 +202,3 @@ To reinforce these tips, try working through similar questions and consciously a
         with st.chat_message("assistant"):
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
-
