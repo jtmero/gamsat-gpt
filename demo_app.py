@@ -18,7 +18,7 @@ if prompt := st.chat_input("Ask me to make you a question"):
         time.sleep(1)
 
     with st.chat_message("assistant"):
-    st.markdown("Certainly, here is a response I generated earlier...")
+        st.markdown("Certainly, here is a response I generated earlier...")
     
     # Simulate a delay with spinner
     with st.spinner('Generating response...'):
