@@ -121,6 +121,10 @@ elif st.session_state.step == 3:
 Hopefully that helped direct your focus on which parts of the stem are relevant. We would then do a similar process with the other options to help you build your ability to critically evaluate the evidence provided.
 After going through all of the options, I would ask you what you think the correct answer is, why don't you have a go?
 """
+        with st.chat_message("assistant"):
+            st.markdown(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
+            
         st.session_state.step = 4
         st.experimental_rerun()
 
