@@ -148,17 +148,17 @@ elif st.session_state.step == 4:
 * The rapid rotation of Exo-415 might produce severe winds and atmospheric dynamics that could spread heat unevenly across the planet, leading to lower average temperatures, despite high daytime temperatures.
 Evidence against each option:
 
-*1. Option A:**
+1. Option A:
 
-    - Against: Methane is known for its greenhouse effect which should increase surface temperatures, contrary to the lower measurements.
+    * Against: Methane is known for its greenhouse effect which should increase surface temperatures, contrary to the lower measurements.
 
-**2. Option B:**
+2. Option B:
     
-    - Against: The argument relies on the denser atmosphere leading to efficient heat radiation, which is an indirect and less intuitive connection.
+    * Against: The argument relies on the denser atmosphere leading to efficient heat radiation, which is an indirect and less intuitive connection.
 
-**3. Option D:**
+3. Option D:
 
-    - Against: Methane's greenhouse effect complicates this explanation. While interactions with other gases could be complex, there's no direct evidence in the stem for this specific interaction leading to cooler temperatures.
+    * Against: Methane's greenhouse effect complicates this explanation. While interactions with other gases could be complex, there's no direct evidence in the stem for this specific interaction leading to cooler temperatures.
 
 I would conclude my response by asking if you struggled with anything in this question or if you would you like tips for improvement? Why don't you ask me for some tips?
 """
