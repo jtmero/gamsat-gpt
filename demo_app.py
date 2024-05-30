@@ -22,8 +22,9 @@ display_chat()
 
 if st.session_state.step == 1:
     with st.chat_message("assistant"):
-        st.markdown("This is an automated demo, I'll show you an example of a question that I generated as well as how you can interact with me")
-        st.session_state.messages.append({"role": "assistant", "content": "This is an automated demo, I'll show you an example of a question that I generated as well as how you can interact with me"})
+        intro = "This is an automated demo, I'll show you an example of a question that I generated as well as how you can interact with me"
+        st.markdown(intro)
+        st.session_state.messages.append({"role": "assistant", "content": intro})
     
     # First user input
     if prompt := st.chat_input("Ask me to make you a question", key="first_input"):
@@ -35,8 +36,8 @@ if st.session_state.step == 1:
         with st.spinner('Generating response...'):
             time.sleep(1)
 
+        response = "Certainly, here is a response I generated earlier..."
         with st.chat_message("assistant"):
-            response = "Certainly, here is a response I generated earlier..."
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
         
@@ -45,8 +46,7 @@ if st.session_state.step == 1:
             time.sleep(4)  # Simulate a delay of 4 seconds
 
         # Display text
-        with st.chat_message("assistant"):
-            question = """
+        question = """
 Given these conditions, consider the effects of depolarizing noise on the entanglement of photon pairs and their subsequent measurement outcomes. Furthermore, analyze how these influences align with various quantum mechanical principles and interpretations, including the collapse of the wavefunction and non-locality.
 
 ## Question ##
@@ -63,24 +63,26 @@ D. If the depolarizing noise parameter 𝑝 is low, the measurement outcomes at 
 
 Can you find any evidence supporting or opposing option A?
 """
+        with st.chat_message("assistant"):
             st.markdown(question)
             st.session_state.messages.append({"role": "assistant", "content": question})
 
         # Provide a predefined response
+        response = "After presenting the question, I would instruct you to look for evidence supporting or opposing answer A, before working through each of the other options."
         with st.chat_message("assistant"):
-            response = "After presenting the question, I would instruct you to look for evidence supporting or opposing answer A, before working through each of the other options."
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
 
         with st.spinner('Generating response...'):
             time.sleep(3)
             
+        response = "However, if you get stuck, I can help direct you towards relevant areas of them stem and ask you questions to prompt your critical thinking. When you're ready, why don't you tell me you are stuck and need some help?"
         with st.chat_message("assistant"):
-            response = "However, if you get stuck, I can help direct you towards relevant areas of them stem and ask you questions to prompt your critical thinking. When you're ready, why don't you tell me you are stuck and need some help?"
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
         
         st.session_state.step = 2
+        st.experimental_rerun()
 
 elif st.session_state.step == 2:
     # Second user input
@@ -93,18 +95,19 @@ elif st.session_state.step == 2:
         with st.spinner('Generating response...'):
             time.sleep(2)
 
-        with st.chat_message("assistant"):
-            response = """
+        response = """
 Ok, let's break down Option A.
 Option A suggests that the high atmospheric methane concentration should result in stronger greenhouse effects, thus higher surface temperatures. Think about:
 1. Methane's Role: Methane is a potent greenhouse gas. Typically, high concentrations of methane would trap more heat.
 2. Contradiction with Evidence: The stem states that the surface temperature is lower than Earth's, which contradicts this idea.
 Does this help you find evidence whether option A is supported or opposed?
 """
+        with st.chat_message("assistant"):
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
         
         st.session_state.step = 3
+        st.experimental_rerun()
 
 elif st.session_state.step == 3:
     # Third user input
@@ -117,11 +120,11 @@ elif st.session_state.step == 3:
         with st.spinner('Generating response...'):
             time.sleep(2)
 
-        with st.chat_message("assistant"):
-            response = """
+        response = """
 Hopefully that helped, we would then do a similar process with the other options to help you build your ability to critically evaluate the evidence provided.
 After going through all of the options, I would ask you what you think the correct answer is, and generate something like this...
 """
+        with st.chat_message("assistant"):
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
         
@@ -129,8 +132,7 @@ After going through all of the options, I would ask you what you think the corre
         with st.spinner('Generating response...'):
             time.sleep(4)
     
-        with st.chat_message("assistant"):
-            response = """
+        response = """
 ## Detailed Response ## 
 
 **Correct answer: Option C**
@@ -148,10 +150,12 @@ Evidence against each option:
 
 I would conclude my response by asking if you struggled with anything in this question or if you would you like tips for improvement? Why don't you ask me for some tips?
 """
+        with st.chat_message("assistant"):
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
 
         st.session_state.step = 4
+        st.experimental_rerun()
 
 elif st.session_state.step == 4:
     # Final user input
@@ -164,8 +168,7 @@ elif st.session_state.step == 4:
         with st.spinner('Generating response...'):
             time.sleep(3)
 
-        with st.chat_message("assistant"):
-            response = """
+        response = """
 Certainly, here are some tips to enhance your critical thinking skills and tackle these challenging questions more effectively:
 ### Tips for Improvement ###
 
@@ -191,5 +194,7 @@ Certainly, here are some tips to enhance your critical thinking skills and tackl
 
 To reinforce these tips, try working through similar questions and consciously apply these strategies. Reflect on your thought process and where you might have missed critical evidence. Over time, this will help hone your reasoning skills.
 """
+        with st.chat_message("assistant"):
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
+
