@@ -1,29 +1,44 @@
 import streamlit as st
 import time
 
-# Initialize session state
+# Initialize session state for chat messages and step tracking
+if 'messages' not in st.session_state:
+    st.session_state.messages = []
 if 'step' not in st.session_state:
     st.session_state.step = 1
+
+# Function to display chat history
+def display_chat():
+    for message in st.session_state.messages:
+        with st.chat_message(message['role']):
+            st.markdown(message['content'])
 
 # Set up the chat
 st.title("GamsatGPT")
 st.subheader("Why don't you try out this demo and ask me to make you a question?")
 
+# Display chat history
+display_chat()
+
 if st.session_state.step == 1:
     with st.chat_message("assistant"):
-        st.markdown("This is an automated demo, I'll show you an example of a question that I generated as well as how you can interact with me. When you're ready, ask me to make you a question!")
+        st.markdown("This is an automated demo, I'll show you an example of a question that I generated as well as how you can interact with me")
+        st.session_state.messages.append({"role": "assistant", "content": "This is an automated demo, I'll show you an example of a question that I generated as well as how you can interact with me"})
     
     # First user input
     if prompt := st.chat_input("Ask me to make you a question", key="first_input"):
         with st.chat_message("user"):
             st.markdown(prompt)
+            st.session_state.messages.append({"role": "user", "content": prompt})
 
         # Simulate a delay with spinner
         with st.spinner('Generating response...'):
             time.sleep(1)
 
         with st.chat_message("assistant"):
-            st.markdown("Certainly, here is a response I generated earlier...")
+            response = "Certainly, here is a response I generated earlier..."
+            st.markdown(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
         
         # Simulate a delay with spinner
         with st.spinner('Generating response...'):
@@ -31,7 +46,7 @@ if st.session_state.step == 1:
 
         # Display text
         with st.chat_message("assistant"):
-            st.markdown("""
+            question = """
 Given these conditions, consider the effects of depolarizing noise on the entanglement of photon pairs and their subsequent measurement outcomes. Furthermore, analyze how these influences align with various quantum mechanical principles and interpretations, including the collapse of the wavefunction and non-locality.
 
 ## Question ##
@@ -47,19 +62,23 @@ C. The correlation between the measurement outcomes at A and B decreases as the 
 D. If the depolarizing noise parameter 𝑝 is low, the measurement outcomes at A and B will be perfectly correlated, but as 𝑝 increases, these correlations diminish and eventually become random.
 
 Can you find any evidence supporting or opposing option A?
-""")
+"""
+            st.markdown(question)
+            st.session_state.messages.append({"role": "assistant", "content": question})
+
         # Provide a predefined response
         with st.chat_message("assistant"):
-            time.sleep(1)
-            st.markdown("After presenting the question, I would instruct you to look for evidence supporting or opposing answer A, before working through each of the other options.")
+            response = "After presenting the question, I would instruct you to look for evidence supporting or opposing answer A, before working through each of the other options."
+            st.markdown(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
 
         with st.spinner('Generating response...'):
             time.sleep(3)
             
         with st.chat_message("assistant"):
-            st.markdown("However, if you get stuck, I can help direct you towards relevant areas of them stem and ask you questions to prompt your critical thinking.")
-            time.sleep(2)
-            st.markdown("Feel free to take your time and have a read of the question. When you're ready, why don't you tell me you are stuck and need some help?")
+            response = "However, if you get stuck, I can help direct you towards relevant areas of them stem and ask you questions to prompt your critical thinking. When you're ready, why don't you tell me you are stuck and need some help?"
+            st.markdown(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
         
         st.session_state.step = 2
 
@@ -68,17 +87,22 @@ elif st.session_state.step == 2:
     if second_prompt := st.chat_input("Enter your reply here...", key="second_input"):
         with st.chat_message("user"):
             st.markdown(second_prompt)
+            st.session_state.messages.append({"role": "user", "content": second_prompt})
 
         # Simulate a delay with spinner
         with st.spinner('Generating response...'):
             time.sleep(2)
 
         with st.chat_message("assistant"):
-            st.markdown("""Ok, let's break down Option A.
+            response = """
+Ok, let's break down Option A.
 Option A suggests that the high atmospheric methane concentration should result in stronger greenhouse effects, thus higher surface temperatures. Think about:
 1. Methane's Role: Methane is a potent greenhouse gas. Typically, high concentrations of methane would trap more heat.
 2. Contradiction with Evidence: The stem states that the surface temperature is lower than Earth's, which contradicts this idea.
-Does this help you find evidence whether option A is supported or opposed?""")
+Does this help you find evidence whether option A is supported or opposed?
+"""
+            st.markdown(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
         
         st.session_state.step = 3
 
@@ -87,22 +111,27 @@ elif st.session_state.step == 3:
     if third_prompt := st.chat_input("Enter your reply here...", key="third_input"):
         with st.chat_message("user"):
             st.markdown(third_prompt)
+            st.session_state.messages.append({"role": "user", "content": third_prompt})
 
         # Simulate a delay with spinner
         with st.spinner('Generating response...'):
             time.sleep(2)
 
         with st.chat_message("assistant"):
-            st.markdown("Hopefully that helped, we would then do a similar process with the other options to help you build your ability to critically evaluate the evidence provided.")
-            time.sleep(2)
-            st.markdown("After going through all of the options, I would ask you what you think the correct answer is, and generate something like this...")
+            response = """
+Hopefully that helped, we would then do a similar process with the other options to help you build your ability to critically evaluate the evidence provided.
+After going through all of the options, I would ask you what you think the correct answer is, and generate something like this...
+"""
+            st.markdown(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
         
         # Simulate a delay with spinner
         with st.spinner('Generating response...'):
             time.sleep(4)
     
         with st.chat_message("assistant"):
-            st.markdown(""" ## Detailed Response ## 
+            response = """
+## Detailed Response ## 
 
 **Correct answer: Option C**
 ### Evidence for Option C: ###
@@ -118,7 +147,9 @@ Evidence against each option:
     * Against: Methane's greenhouse effect complicates this explanation. While interactions with other gases could be complex, there's no direct evidence in the stem for this specific interaction leading to cooler temperatures.
 
 I would conclude my response by asking if you struggled with anything in this question or if you would you like tips for improvement? Why don't you ask me for some tips?
-""")
+"""
+            st.markdown(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
 
         st.session_state.step = 4
 
@@ -127,13 +158,15 @@ elif st.session_state.step == 4:
     if final_prompt := st.chat_input("Enter your reply here...", key="final_input"):
         with st.chat_message("user"):
             st.markdown(final_prompt)
+            st.session_state.messages.append({"role": "user", "content": final_prompt})
 
         # Simulate a delay with spinner
         with st.spinner('Generating response...'):
             time.sleep(3)
 
         with st.chat_message("assistant"):
-            st.markdown("""Certainly, here are some tips to enhance your critical thinking skills and tackle these challenging questions more effectively:
+            response = """
+Certainly, here are some tips to enhance your critical thinking skills and tackle these challenging questions more effectively:
 ### Tips for Improvement ###
 
 1. Break Down the Stem:
@@ -157,4 +190,6 @@ elif st.session_state.step == 4:
 ### Practice Exercise ###
 
 To reinforce these tips, try working through similar questions and consciously apply these strategies. Reflect on your thought process and where you might have missed critical evidence. Over time, this will help hone your reasoning skills.
-""")
+"""
+            st.markdown(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
