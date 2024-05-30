@@ -145,7 +145,7 @@ elif st.session_state.step == 4:
 **Correct answer: Option C**
 ### Evidence for Option C: ###
 
-* The rapid rotation of Exo-415 might produce severe winds and atmospheric dynamics that could spread heat unevenly across the planet, leading to lower average temperatures, despite high daytime temperatures.
+The rapid rotation of Exo-415 might produce severe winds and atmospheric dynamics that could spread heat unevenly across the planet, leading to lower average temperatures, despite high daytime temperatures.
 Evidence against each option:
 
 1. Option A:
