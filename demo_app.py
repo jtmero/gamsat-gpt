@@ -33,9 +33,10 @@ Recent studies have introduced an additional layer of complexity to this phenome
 
 Given these conditions, consider the effects of depolarizing noise on the entanglement of photon pairs and their subsequent measurement outcomes. Furthermore, analyze how these influences align with various quantum mechanical principles and interpretations, including the collapse of the wavefunction and non-locality.
 
-Question: Given the experimental conditions described, which of the following statements is most likely correct regarding the correlation of measurement outcomes at locations A and B?
+## Question: ##
+Given the experimental conditions described, which of the following statements is most likely correct regarding the correlation of measurement outcomes at locations A and B?
 
-## Options: ##
+#### Options: ####
 A. If the depolarizing noise parameter 𝑝 is high, the measurement outcomes at A and B will show no correlation.
 
 B. Regardless of the depolarizing noise parameter 𝑝, the measurement outcomes at A and B will remain perfectly correlated due to the nature of entanglement.
