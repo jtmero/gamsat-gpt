@@ -1,31 +1,43 @@
 import streamlit as st
-from google.api_core import client_options as client_options_lib
-from google.cloud.aiplatform_v1beta1.services.prediction_service import PredictionServiceClient
-from google.cloud.aiplatform_v1beta1.types import prediction_service
+import vertexai
+from vertexai.preview.language_models import TextGenerationModel
 import os
 
 # Set up the chat
-st.title("GamsatGPT")
+st.title("GamsatGPT (Powered by Gemini)")
 st.subheader("Ask me to make you a question!")
 
-# Load environment variables (you'll need to set these for Gemini Pro)
+# Load the environment variables 
 project_id = os.environ["PROJECT_ID"]
-endpoint_id = os.environ["ENDPOINT_ID"]
 location = os.environ["LOCATION"]  
 
-# Initialize Gemini Pro client (through Vertex AI)
-client_options = client_options_lib.ClientOptions(
-    api_endpoint=f"{location}-aiplatform.googleapis.com"
-)
-client = PredictionServiceClient(client_options=client_options)
+# Initialize Vertex AI 
+vertexai.init(project=project_id, location=location)
 
+# Initialize the Gemini Pro 1.5 Flash Model with a system prompt.
+model = TextGenerationModel.from_pretrained("models/gemini-1.5-flash-001",
+    system_instruction="You are a helpful assistant that makes gamstat style questions")
+
+# Configuration for text generation
+generation_config = {
+    "max_output_tokens": 8192,
+    "temperature": 1,
+    "top_p": 0.95,
+}
+
+# Safety settings to filter out harmful content
+safety_settings = {
+    vertexai.preview.language_models.HarmCategory.HARM_CATEGORY_HATE_SPEECH: vertexai.preview.language_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+    vertexai.preview.language_models.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: vertexai.preview.language_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+    vertexai.preview.language_models.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: vertexai.preview.language_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+    vertexai.preview.language_models.HarmCategory.HARM_CATEGORY_HARASSMENT: vertexai.preview.language_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+}
 
 # Initialize session state
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "thread_id" not in st.session_state:
     st.session_state.thread_id = 1 
-
 
 # Display messages
 for message in st.session_state.messages:
@@ -38,24 +50,18 @@ if prompt := st.chat_input("Enter your reply"):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Prepare request for Gemini Pro (adapt parameters as needed)
-    instance = prediction_service.PredictRequest(
-        endpoint=client.endpoint_path(project_id, location, endpoint_id),
-        instances=[{"prompt": prompt}]  
-    )
+    try:
+        # Generate and display the Gemini Pro reply
+        with st.spinner('Generating response...'):
+            responses = model.generate_text(
+                prompt=prompt,
+                generation_config=generation_config,
+                safety_settings=safety_settings,
+                stream=True,
+            )
 
-    # Generate and display the Gemini Pro reply
-    with st.spinner('Generating response...'):
-        response = client.predict(request=instance)
-
-        # Extract and process text content from Gemini's response
-        # (Adapt this part based on your actual Gemini Pro response structure)
-        # Assuming Gemini Pro returns text in a 'text' field within 'predictions'
-        text_content = response.predictions[0]['content'] 
-
-        st.session_state.messages.append({"role": "assistant", "content": text_content})
-
-        # Simulate streaming behavior (optional)
-        for chunk in text_content.split(" "):  
-            with st.chat_message("assistant"):
-                st.markdown(chunk + " ")  # Add a space after each chunk
+            for response in responses:
+                with st.chat_message("assistant"):
+                    st.markdown(response.text, end="") 
+    except Exception as e:  
+        st.error(f"An error occurred: {e}")
